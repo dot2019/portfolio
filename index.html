@@ -1,0 +1,1483 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Amolika Mehta, 3rd Year BSc Animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a 3D app workspace. Intro, then Section A as a code-numbered index (A.2-A.6); each project = brief + approach, then hero render and thumbnails (house keeps its stage viewer, van gets a 5-slot turnaround strip); B-D placeholders, reel, about, contact. Single dark theme on purpose: it is a viewport. Accent = the roof's terracotta, which doubles as selection orange. */
+:root{
+  /* paper, indigo ink, river blue, painted stone, lichen yellow */
+  /* sunlit water: deep teal-green, pale gold light, white sparkle */
+  --bg:#0d2b29; --panel:#123634; --panel-2:#18413e; --line:#2a5652;
+  --fg:#f2ead2; --muted:#a6bfb5; --water:#a8e0d4; --deep:#0a2220;
+  --select:#e8c873; --vp:#0a1716; --lichen:#e8c873; --mortar:#3d2b23; --ink-dark:#0f2c2a;
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);padding-inline:16px;padding-block:0}
+.wrap{max-width:1200px;margin:0 auto}
+a{color:inherit}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--select);outline-offset:3px}
+.label{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+.linkbtn{background:none;border:0;color:var(--select);font:inherit;cursor:url(img/cursor-sword-hover.png) 8 8,pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:6px;flex-wrap:wrap}
+.brand{font:700 16px/1 var(--display);display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--fg);cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.brand:hover span{color:var(--select)}
+.brand svg{width:30px;height:30px}
+.brand-txt{display:flex;flex-direction:column;gap:5px}
+.brand-txt small{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+nav{align-items:center}
+.insd{height:56px;width:auto;background:#fff;border-radius:7px;padding:2px 5px;margin-left:6px;display:block}
+@media (max-width:900px){.insd{height:42px}.brand-txt small{display:none}}
+nav{display:flex;gap:18px;flex-wrap:wrap}
+nav a{text-decoration:none;font:600 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+nav a:hover{color:var(--select)}
+
+/* intro */
+.intro{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:end;padding-block:40px 24px}
+.intro h1{font-size:clamp(38px,6.4vw,84px);font-weight:900;line-height:.95;margin-top:14px}
+.intro h1 em{font-style:normal;color:var(--select)}
+.intro p{color:var(--muted);max-width:46ch;margin:0}
+
+/* viewport + outliner */
+.editor{display:grid;grid-template-columns:minmax(0,1fr) 320px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+.vp{position:relative;aspect-ratio:1/1;max-height:720px;width:100%;background:var(--vp);overflow:hidden;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.vp img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .6s ease}
+.vp img.on{opacity:1}
+.hud{position:absolute;pointer-events:none;font:600 12px/1.5 var(--mono);color:#eef1f3;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.hud.tl{top:12px;left:14px}.hud.tr{top:12px;right:14px;text-align:right}.hud.bl{bottom:12px;left:14px}
+.hud .stage{color:var(--select)}
+.panel{border-left:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.panel-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stages{display:flex;flex-direction:column}
+.stage-btn{position:relative;display:grid;grid-template-columns:28px minmax(0,1fr);gap:0 10px;align-items:start;background:none;border:0;border-bottom:1px solid var(--line);color:var(--muted);padding:12px 16px;text-align:left;cursor:url(img/cursor-sword-hover.png) 8 8,pointer;font:inherit}
+.stage-btn .n{font:600 12px/1.6 var(--mono)}
+.stage-btn b{display:block;font:700 14px/1.3 var(--display);color:var(--fg)}
+.stage-btn small{display:block;font:400 12px/1.4 var(--mono);margin-top:3px}
+.stage-btn .fill{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--select);transform:scaleY(0);transform-origin:top}
+.stage-btn[aria-pressed="true"]{background:var(--panel-2)}
+.stage-btn[aria-pressed="true"] b,.stage-btn[aria-pressed="true"] .n{color:var(--select)}
+.stage-btn[aria-pressed="true"] .fill{transform:scaleY(1)}
+.stage-btn.auto[aria-pressed="true"] .fill{animation:fill var(--dur,4s) linear forwards}
+@keyframes fill{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stage-note{padding:16px;font-size:14px;color:var(--muted);margin:0;flex:1}
+.panel-foot{padding:12px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px}
+
+section{padding-block:64px;border-top:1px solid var(--line);margin-top:56px}
+section+section{margin-top:0}
+.head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.head h2{font-size:clamp(30px,4.6vw,56px);font-weight:900;margin-top:8px}
+
+/* case study */
+.case{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:40px}
+.brief{border-left:3px solid var(--select);background:var(--panel);padding:18px 20px;border-radius:0 6px 6px 0;margin:0 0 28px}
+.brief p{margin:8px 0 0;max-width:60ch}
+.brief .out{margin-top:12px;font-size:14px;color:var(--muted)}
+.brief .out b{color:var(--fg);font-weight:600}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;padding:14px 0;border-top:1px solid var(--line)}
+.steps .n{font:600 13px var(--mono);color:var(--select);padding-top:3px}
+.steps h3{font-size:16px;font-weight:700}
+.steps p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:56ch}
+.steps .linkbtn{font-size:13px;margin-top:6px}
+.specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:0 0 24px}
+.specs div{background:var(--panel);padding:14px 16px}
+.specs dt{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.specs dd{margin:8px 0 0;font:600 15px/1.35 var(--body);font-variant-numeric:tabular-nums}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 24px}
+.pair figure{margin:0;background:var(--vp);border-radius:4px;overflow:hidden;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.pair figcaption{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:9px 10px;background:var(--panel)}
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.sw{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.sw i{display:block;height:56px}
+.sw span{display:block;padding:8px 10px 2px;font-size:13px;font-weight:600}
+.sw code{display:block;padding:0 10px 9px;font:400 11px var(--mono);color:var(--muted)}
+
+/* gallery */
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:4px;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.chip[aria-pressed="true"]{color:#fff;background:var(--select);border-color:var(--select)}
+.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.shot{position:relative;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--vp);cursor:url(img/cursor-sword-hover.png) 8 8,pointer;aspect-ratio:1/1;max-width:100%}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.shot:hover img{transform:scale(1.03)}
+.shot span{position:absolute;left:8px;bottom:8px;font:600 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:6px 8px;border-radius:3px}
+.shot.wide{grid-column:span 2;aspect-ratio:2/1}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(10,11,13,.94);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px calc(env(safe-area-inset-bottom,0px) + 12px)}
+.lb[hidden],[hidden]{display:none!important}
+.lb-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font:600 12px var(--mono)}
+.lb-img{min-height:0;display:flex;align-items:center;justify-content:center;padding-block:12px}
+.lb-img img{max-height:100%;max-width:100%;object-fit:contain;border-radius:4px}
+.lb-nav{display:flex;justify-content:center;gap:10px}
+.iconbtn{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:10px 14px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.iconbtn:hover{border-color:var(--select);color:var(--select)}
+
+/* reel */
+.reel{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px}
+.reel-card{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:6px;overflow:hidden;border:1px solid var(--line);text-decoration:none;display:block;background:#121417}
+.reel-card img{width:100%;height:100%;object-fit:cover;opacity:.55}
+.reel-card .ttl{position:absolute;left:20px;bottom:18px;right:20px}
+.reel-card h3{font-size:clamp(26px,4vw,46px);font-weight:900}
+.reel-card .playc{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;border:2px solid var(--fg);display:grid;place-items:center;transition:transform .2s,background .2s}
+.reel-card:hover .playc{transform:translate(-50%,-50%) scale(1.08);background:var(--select);border-color:var(--select)}
+.reel-card .playc svg{width:30px;height:30px;margin-left:5px}
+.bd{width:100%;border-collapse:collapse;font-size:14px}
+.bd th{text-align:left;font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;border-bottom:1px solid var(--line)}
+.bd td{padding:11px 10px 11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.bd td:first-child{font:600 13px var(--mono);color:var(--select);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:3px;background:var(--panel-2);color:var(--fg);border:1px solid var(--line)}
+.tag.on{border-color:var(--select);color:var(--select)}
+
+/* work */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{display:flex;flex-direction:column;gap:12px;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px 10px 14px;transition:border-color .2s,transform .2s}
+.card:hover{border-color:var(--select);transform:translateY(-3px)}
+.thumb{aspect-ratio:4/3;max-width:100%;border-radius:4px;position:relative;overflow:hidden;background:#111}
+.thumb canvas,.thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.thumb .ph{position:absolute;left:8px;top:8px;font:600 10px var(--mono);letter-spacing:.08em;color:rgba(255,255,255,.8);text-transform:uppercase;text-shadow:0 1px 2px #000}
+.card h3{font-size:18px;font-weight:700;padding-inline:4px}
+.card .row{display:flex;justify-content:space-between;gap:8px;padding-inline:4px;font:400 12px var(--mono);color:var(--muted);flex-wrap:wrap}
+
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.about p{max-width:60ch;margin:0 0 14px}
+.kit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;align-self:start}
+.kit div{background:var(--panel);padding:16px}
+.kit span{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.kit b{display:block;font:700 16px/1.35 var(--display);margin-top:8px}
+
+/* contact */
+.contact{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:end}
+.contact h2{font-size:clamp(36px,6.4vw,84px);font-weight:900;line-height:.98;margin-top:12px}
+.contact h2 em{font-style:normal;color:var(--select)}
+.mail{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.mail code{font:600 clamp(15px,2vw,19px) var(--mono);padding:12px 14px;border:1px solid var(--line);background:var(--panel);border-radius:4px;user-select:all;word-break:break-all}
+.btn{padding:12px 16px;border:1px solid var(--select);color:var(--select);background:none;font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;border-radius:4px;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.btn:hover{background:var(--select);color:#fff}
+.links{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.links a{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--line);text-decoration:none;font:700 20px/1 var(--display)}
+.links a span{font:400 12px var(--mono);color:var(--muted);align-self:center}
+.links a:hover{color:var(--select)}
+footer{padding-block:28px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:56px;font:400 12px var(--mono);color:var(--muted)}
+
+@media (max-width:980px){
+  .intro,.case,.reel,.about,.contact{grid-template-columns:1fr}
+  .editor{grid-template-columns:1fr}
+  .panel{border-left:0;border-top:1px solid var(--line)}
+  .stages{flex-direction:row;overflow-x:auto}
+  .stage-btn{min-width:150px;border-bottom:0;border-right:1px solid var(--line)}
+  .stage-btn .fill{top:auto;right:0;width:auto;height:3px;transform:scaleX(0);transform-origin:left}
+  .stage-btn[aria-pressed="true"] .fill{transform:scaleX(1)}
+  .stage-btn.auto[aria-pressed="true"] .fill{animation-name:fillx}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@keyframes fillx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (max-width:560px){
+  .bar{position:static}
+  nav{gap:6px 14px}
+  .shot span{display:none}
+  .grid,.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:1fr}
+  .shot.wide{grid-column:span 2}
+  .swatches{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .specs{grid-template-columns:1fr}
+  .bd .hide-sm{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- Section A structure ---- */
+.sec-head{padding-block:72px 8px;border-top:1px solid var(--line);margin-top:56px}
+.sec-head .code{font:900 clamp(64px,12vw,160px)/.85 var(--display);color:var(--select);letter-spacing:-.04em}
+.sec-head .row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:end}
+.sec-head h2{font-size:clamp(30px,4.6vw,56px);font-weight:900;margin-top:8px}
+.sec-head p{color:var(--muted);max-width:62ch;margin:14px 0 0}
+.index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:32px}
+.idx{display:flex;flex-direction:column;gap:10px;text-decoration:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 8px 12px;transition:border-color .2s,transform .2s}
+.idx:hover{border-color:var(--select);transform:translateY(-3px)}
+.idx .im{aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:var(--vp);max-width:100%}
+.idx .im img{width:100%;height:100%;object-fit:cover}
+.idx .c{font:600 12px var(--mono);color:var(--select);padding-inline:4px}
+.idx b{font:700 16px/1.25 var(--display);padding-inline:4px}
+.proj{padding-block:64px 8px;border-top:1px solid var(--line);margin-top:56px}
+.proj-head{display:flex;gap:10px 18px;align-items:baseline;flex-wrap:wrap;margin-bottom:24px}
+.proj-head .c{font:600 14px var(--mono);color:var(--select);border:1px solid var(--select);padding:6px 9px;border-radius:4px;align-self:center}
+.proj-head h2{font-size:clamp(30px,4.6vw,56px);font-weight:900}
+.proj-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;margin-bottom:28px}
+.proj-top .brief{margin:0}
+.intro-text p{max-width:60ch;margin:0 0 14px;font-size:17px}
+.intro-text .hello{font-size:clamp(19px,2vw,23px);line-height:1.5}
+.intro-text .hello b{color:var(--select);font-weight:700}
+#about{margin-top:0;border-top:0}
+.vid-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.vid-pair .vid-wrap video{max-height:none}
+.face-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.face-pair .thumb-btn{aspect-ratio:5/4}
+.face-pair .thumb-btn img{object-fit:contain}
+@media (max-width:560px){.face-pair{grid-template-columns:1fr}}
+.vid-cap{padding:8px 12px;background:var(--panel);font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+@media (max-width:560px){.vid-pair{grid-template-columns:1fr}}
+.used{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin:-14px 0 28px;font:600 13px/1.4 var(--mono);color:var(--muted)}
+.used span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--select);border:1px solid var(--select);border-radius:3px;padding:4px 7px}
+.proj-desc{font-size:clamp(17px,1.6vw,19px);line-height:1.6;max-width:62ch;margin:0 0 28px;color:var(--fg)}
+.approach h3{font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.approach ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.approach li{padding:10px 0;border-top:1px solid var(--line);font-size:15px;max-width:60ch}
+.approach li b{font-weight:600}
+.scene{margin-top:40px}
+.scene-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.scene-head h3{font-size:22px;font-weight:700}
+.scene-head p{margin:0;color:var(--muted);font-size:14px;max-width:60ch}
+.hero-shot{display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--vp);cursor:url(img/cursor-sword-hover.png) 8 8,pointer;aspect-ratio:16/9;position:relative}
+.hero-shot img{width:100%;height:100%;object-fit:cover}
+.hero-shot .tag-hero{position:absolute;left:12px;top:12px;font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--select);padding:6px 8px;border-radius:3px}
+.hero-shot .cap{position:absolute;left:12px;bottom:12px;font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6);padding:7px 9px;border-radius:3px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:10px}
+.thumb-btn{padding:0;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--vp);cursor:url(img/cursor-sword-hover.png) 8 8,pointer;aspect-ratio:16/9;position:relative}
+.thumb-btn img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.thumb-btn:hover img{transform:scale(1.04)}
+.thumb-btn span{position:absolute;left:6px;bottom:6px;font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6);padding:5px 7px;border-radius:3px}
+.turn-wrap{overflow-x:auto;margin-top:12px}
+.turn{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px}
+.slot{margin:0}
+.slot .box{aspect-ratio:4/3;border-radius:5px;overflow:hidden;background:var(--vp);border:1px solid var(--line);display:grid;place-items:center;max-width:100%}
+.slot .box img{width:100%;height:100%;object-fit:cover;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.slot .box.empty{border:1px dashed #5a6068;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(255,255,255,.025) 10px 20px),var(--panel);font:600 11px var(--mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.slot figcaption{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between;gap:6px}
+.slot figcaption b{color:var(--fg);font-weight:600}
+.house-gallery{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.house-gallery .thumb-btn{aspect-ratio:1/1}
+.soon{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:28px}
+.soon div{border:1px dashed #5a6068;border-radius:6px;padding:22px;background:var(--panel)}
+.soon b{display:block;font:900 44px/1 var(--display);color:var(--muted)}
+.soon span{display:block;margin-top:10px;font:600 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.reel-list{list-style:none;margin:0;padding:0}
+.reel-list li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.reel-list .c{font:600 13px var(--mono);color:var(--select)}
+@media (max-width:980px){
+  .index{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .proj-top{grid-template-columns:1fr}
+  .soon{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .sec-head .row{grid-template-columns:1fr;gap:8px}
+  .thumbs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .house-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .thumb-btn span{display:none}
+}
+
+/* ---- River ---- */
+.river-hero{position:relative;height:clamp(560px,calc(100dvh - 60px),900px);margin:0 -16px;padding:0;border-top:0;overflow:hidden;background:var(--bg)}
+.river-hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rh-copy{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:40px 16px 0;pointer-events:none}
+.rh-copy h1{font-size:clamp(38px,6.2vw,82px);font-weight:800;line-height:1;margin-top:14px;color:#f6f2e8;text-shadow:0 2px 3px rgba(8,18,8,.6),0 0 26px rgba(8,18,8,.7)}
+.river-hero .rh-copy p,.river-hero .rh-copy .label{color:#eef0e4;text-shadow:0 1px 2px rgba(8,18,8,.8),0 0 14px rgba(8,18,8,.8)}
+.river-hero{background:#0b1714}
+.river-hero .rh-copy h1 em{text-shadow:none}
+.rh-copy h1 em{font-style:normal;color:var(--fg);background:linear-gradient(transparent 58%,var(--lichen) 58%,var(--lichen) 90%,transparent 90%);padding-inline:.06em}
+.rh-copy p{color:var(--muted);margin:16px 0 0;max-width:44ch}
+.stops{position:absolute;inset:0;z-index:3;pointer-events:none}
+.stop{position:absolute;left:var(--x,50%);top:var(--y,50%);transform:translate(-32px,-32px);display:flex;align-items:center;gap:14px;background:none;border:0;padding:0;cursor:url(img/cursor-sword-hover.png) 8 8,pointer;pointer-events:auto;color:var(--fg);text-align:left;font:inherit}
+.stop.left{flex-direction:row-reverse;transform:translate(calc(-100% + 32px),-32px);text-align:right}
+.stone{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font:900 26px/1 var(--display);color:#fff;background:var(--select);box-shadow:0 0 0 6px rgba(240,122,69,.18),0 0 0 14px rgba(92,200,223,.10),0 8px 24px rgba(0,0,0,.5);transition:transform .25s,box-shadow .25s}
+.stop:hover .stone,.stop:focus-visible .stone{transform:scale(1.08);box-shadow:0 0 0 8px rgba(240,122,69,.28),0 0 0 22px rgba(92,200,223,.14),0 8px 24px rgba(0,0,0,.5)}
+.stop:not(.soon-stop) .stone{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.stop-txt{background:rgba(12,20,24,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:6px;padding:10px 14px;max-width:min(300px,calc(100vw - 120px))}
+.stop-txt b{display:block;font:700 15px/1.25 var(--display)}
+.stop-txt small{display:block;margin-top:4px;font:600 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--water)}
+.soon-stop .stone{background:var(--panel-2);color:var(--muted);border:1px dashed #4b6670;box-shadow:0 0 0 10px rgba(92,200,223,.06)}
+.soon-stop .stop-txt small{color:var(--muted)}
+.stop[aria-expanded="true"] .stone{background:var(--water);color:#06222a}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:40;background:var(--panel-2);border:1px solid var(--water);color:var(--fg);padding:10px 16px;border-radius:6px;font:600 13px var(--mono)}
+.flow{position:relative;padding-left:48px}
+.spine{position:absolute;left:14px;top:0;bottom:0;width:14px;border-radius:7px;overflow:hidden;background:var(--deep)}
+.spine i{position:absolute;inset:-60px 0 0;background:repeating-linear-gradient(180deg,rgba(92,200,223,0) 0 22px,rgba(160,230,245,.55) 22px 30px,rgba(92,200,223,0) 30px 60px);animation:flowdown 1.6s linear infinite}
+@keyframes flowdown{to{transform:translateY(60px)}}
+.flow .sec-head,.flow .proj{position:relative}
+.flow .proj::before,.flow .sec-head::before{content:"";position:absolute;left:-43px;top:76px;width:18px;height:18px;border-radius:50%;background:var(--select);box-shadow:0 0 0 5px var(--bg),0 0 0 7px rgba(92,200,223,.5)}
+.flow.arriving .sec-head,.flow.arriving .proj,.flow.arriving .flow-end{animation:flowIn .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * 140ms)}
+@keyframes flowIn{from{opacity:0;transform:translate(var(--dx,0),-48px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.flow-end{padding-block:48px 8px;display:flex;justify-content:center}
+.kit .kit-wide{grid-column:1/-1}
+.kit ul{margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.kit li{font:600 15px/1.4 var(--body);color:var(--fg)}
+.kit li::marker{color:var(--select)}
+.pending .proj-head h2{color:var(--muted)}
+.pend-box{aspect-ratio:16/7;max-width:100%;border:1px dashed #4b6670;border-radius:6px;display:grid;place-items:center;background:repeating-linear-gradient(45deg,transparent 0 12px,rgba(92,200,223,.04) 12px 24px),var(--panel)}
+.pend-mini{display:grid;place-items:center;width:100%;height:100%;border:1px dashed #4b6670;border-radius:4px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.vid-wrap{margin:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#000}
+.vid-wrap video{display:block;width:100%;aspect-ratio:1376/756;max-width:100%;background:#3a3a3a}
+.vid-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:var(--panel)}
+.vid-btns{display:flex;gap:6px;flex-wrap:wrap}
+@media (max-width:560px){
+  .river-hero{height:820px}
+  .flow{padding-left:30px}
+  .spine{left:6px;width:10px}
+  .flow .proj::before,.flow .sec-head::before{left:-28px;width:14px;height:14px}
+  .stone{width:52px;height:52px;font-size:21px}
+  .stop{transform:translate(-26px,-26px)}
+  .stop.left{transform:translate(calc(-100% + 26px),-26px)}
+  .stop-txt{max-width:min(230px,calc(100vw - 100px))}
+}
+@media (prefers-reduced-motion:reduce){.spine i,.stop .stone{animation:none}}
+
+/* ---- one-screen home ---- */
+html.v-home,html.v-home body{height:100%;overflow:hidden}
+html.v-home .river-hero{border-radius:0}
+.view-page,.flow{animation:none}
+.flow-end{padding-block:40px 8px}
+nav a[aria-current="page"]{color:var(--select)}
+#about,#contact{margin-top:0;border-top:0;padding-block:40px 24px}
+@media (max-width:560px){html.v-home .rh-copy p{display:none}.stop-txt small{display:none}.stop-txt{padding:7px 10px}.stop-txt b{font-size:13px}}
+
+.slides{display:grid;grid-auto-flow:column;grid-auto-columns:calc(50% - 6px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;border-radius:6px}
+.slides::-webkit-scrollbar{display:none}
+.slide{position:relative;scroll-snap-align:start;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--vp);aspect-ratio:16/9;cursor:url(img/cursor-sword-hover.png) 8 8,pointer}
+.slide img{width:100%;height:100%;object-fit:cover}
+.slide span{position:absolute;left:8px;bottom:8px;font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.6);padding:6px 8px;border-radius:3px}
+.slider-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+.slider-btns{display:flex;gap:8px}
+.slider-btns .iconbtn{font-size:16px;padding:9px 16px}
+.slider-btns .iconbtn:disabled{opacity:.35;cursor:default;border-color:var(--line);color:var(--muted)}
+@media (max-width:560px){.slides{grid-auto-columns:100%}}
+
+/* ---- stage viewers ---- */
+.sv .vp{max-height:none}
+.sv .vp img{opacity:0;transition:none;z-index:0}
+.sv .vp img.prev{opacity:1;z-index:1}
+.sv .vp img.on{opacity:1;z-index:2;animation:svFade .9s cubic-bezier(.2,.7,.2,1) both}
+.sv .hud{z-index:6}
+.fx-wipe .vp img.on{animation-name:svWipe;animation-duration:1.1s}
+.fx-slide .vp img.on{animation-name:svSlide}
+.fx-zoom .vp img.on{animation-name:svZoom;animation-duration:1.2s}
+.fx-iris .vp img.on{animation-name:svIris;animation-duration:1.2s}
+@keyframes svFade{from{opacity:0}}
+@keyframes svWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes svSlide{from{opacity:0;transform:translateX(7%)}to{opacity:1;transform:none}}
+@keyframes svZoom{from{opacity:0;transform:scale(1.14)}to{opacity:1;transform:none}}
+@keyframes svIris{from{clip-path:circle(0% at 50% 55%)}to{clip-path:circle(80% at 50% 55%)}}
+.sv-flash{position:absolute;inset:0;z-index:5;background:radial-gradient(circle at 60% 45%,#fff6e0,rgba(255,200,120,.6) 30%,transparent 70%);opacity:0;pointer-events:none}
+.sv-flash.go{animation:svFlash .55s ease-out}
+@keyframes svFlash{0%{opacity:.95}100%{opacity:0}}
+.lbx .vp::before,.lbx .vp::after{content:"";position:absolute;left:0;right:0;height:12%;background:#000;z-index:4;pointer-events:none}
+.lbx .vp::before{top:0}.lbx .vp::after{bottom:0}
+.lbx .hud.tl{top:calc(12% + 10px)}.lbx .hud.tr{top:calc(12% + 10px)}.lbx .hud.bl{bottom:calc(12% + 10px)}
+.sv .panel{position:relative}
+.sv .panel-in{position:absolute;inset:0;display:flex;flex-direction:column}
+.sv .stages{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin}
+.sv .stage-btn{padding:9px 16px}
+.sv .stage-note{flex:none;padding:12px 16px;font-size:13px;border-top:1px solid var(--line)}
+@media (max-width:980px){.sv .panel-in{position:static}.sv .stages{overflow-x:auto;overflow-y:hidden}}
+@media (prefers-reduced-motion:reduce){.sv .vp img.on{animation:none}.sv-flash.go{animation:none}}
+
+/* ===== ink & stone theme ===== */
+h1,h2,h3{font-weight:800}
+.stone{flex:none;width:68px;height:66px;display:grid;place-items:center;font:800 28px/1 var(--display);color:var(--fg);background:var(--sb,url(img/stone-1.webp)) center/cover,#c9c6c4;border:3px solid var(--mortar);border-radius:44% 56% 47% 53%/53% 45% 55% 47%;text-shadow:0 0 6px rgba(255,255,255,.95),0 0 2px #fff;box-shadow:0 5px 0 -1px rgba(61,43,35,.45),0 12px 22px rgba(28,43,79,.22);transition:transform .25s,box-shadow .25s}
+.stop:nth-child(1) .stone{--sb:url(img/stone-2.webp)}
+.stop:nth-child(2) .stone{--sb:url(img/stone-1.webp);border-radius:52% 48% 56% 44%/46% 54% 46% 54%}
+.stop:nth-child(3) .stone{--sb:url(img/stone-4.webp);border-radius:47% 53% 42% 58%/55% 47% 53% 45%}
+.stop:nth-child(4) .stone{--sb:url(img/stone-5.webp);border-radius:55% 45% 50% 50%/48% 56% 44% 52%}
+.stop:nth-child(5) .stone{--sb:url(img/stone-3.webp);border-radius:42% 58% 53% 47%/50% 44% 56% 50%}
+.stop:hover .stone,.stop:focus-visible .stone{transform:rotate(-6deg) scale(1.08);box-shadow:0 5px 0 -1px rgba(61,43,35,.45),0 0 0 6px rgba(242,198,24,.55),0 14px 24px rgba(28,43,79,.25)}
+.stop[aria-expanded="true"] .stone{background:var(--sb) center/cover;color:var(--fg);box-shadow:0 5px 0 -1px rgba(61,43,35,.45),0 0 0 5px var(--lichen)}
+.stop-txt{background:rgba(246,242,234,.95);backdrop-filter:none;border:1.5px solid var(--fg);border-radius:3px;box-shadow:3px 3px 0 var(--fg);color:var(--fg)}
+.stop-txt b{font-family:var(--display);font-weight:800;font-size:16px}
+.stop-txt small{color:var(--water)}
+.toast{background:var(--bg);border:1.5px solid var(--fg);box-shadow:3px 3px 0 var(--fg)}
+.sec-head .code{background:url(img/stone-wall.webp) center/cover;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:2px var(--mortar);font-weight:800}
+.spine{background:repeating-linear-gradient(90deg,transparent 0 1.5px,rgba(43,127,191,.55) 1.5px 3px,transparent 3px 4.6px)}
+.spine i{background:repeating-linear-gradient(180deg,rgba(244,240,231,0) 0 22px,rgba(244,240,231,.95) 22px 28px,rgba(244,240,231,0) 28px 60px)}
+.flow .proj::before,.flow .sec-head::before{background:url(img/stone-2.webp) center/cover;border:2px solid var(--mortar);border-radius:46% 54% 50% 50%/54% 46% 54% 46%;box-shadow:0 0 0 4px var(--bg)}
+.proj-head .c{color:var(--fg);border-color:var(--fg);background:var(--lichen);box-shadow:2px 2px 0 var(--fg)}
+.idx .c{color:var(--water)}
+.idx:hover,.card:hover{border-color:var(--fg);box-shadow:4px 4px 0 var(--fg)}
+.btn{border:1.5px solid var(--fg);color:var(--fg);box-shadow:3px 3px 0 var(--fg)}
+.btn:hover{background:var(--lichen);color:var(--fg)}
+.intro-text .hello b{color:var(--fg);background:linear-gradient(transparent 60%,var(--lichen) 60% 92%,transparent 92%)}
+.kit li::marker{color:var(--water)}
+nav a[aria-current="page"]{color:var(--fg);text-decoration:underline;text-decoration-color:var(--lichen);text-decoration-thickness:4px;text-underline-offset:5px}
+.brand svg path{stroke:var(--water)}
+.brand:hover span{color:var(--water)}
+.contact h2 em,.intro h1 em{color:var(--fg);background:linear-gradient(transparent 60%,var(--lichen) 60% 90%,transparent 90%)}
+.stage-btn[aria-pressed="true"] b,.stage-btn[aria-pressed="true"] .n{color:var(--water)}
+.stage-btn .fill{background:var(--lichen)}
+.slot .box.empty,.pend-box{border-color:#a99f8a}
+
+/* ---- watching eye (from Amolika's ink drawing) ---- */
+.eye-bg{position:fixed;z-index:0;pointer-events:none;width:min(82vw,900px);aspect-ratio:921/757;left:50%;top:54%;transform:translate(-50%,-50%);opacity:.17;mix-blend-mode:screen;transition:opacity .6s}
+html.v-home .eye-bg{opacity:0}
+.eye-ring{position:absolute;inset:0;background:url(img/eye-ring-lt.webp) center/contain no-repeat;filter:url(#inkFlow)}
+.eye-iris{position:absolute;width:36.05%;aspect-ratio:1;left:50.02%;top:54.73%;background:url(img/eye-iris-lt.webp) center/contain no-repeat;transform:translate(calc(-50% + var(--ix,0px)),calc(-50% + var(--iy,0px))) scaleY(var(--blink,1));filter:url(#inkFlowIris)}
+main.wrap,footer{position:relative;z-index:1}
+.bar{z-index:10}
+.kit div,.idx,.card,.mat,.sw{background:color-mix(in srgb,var(--panel) 72%,transparent)}
+@media (max-width:700px){.eye-bg{width:140vw;opacity:.15}}
+@media (prefers-reduced-motion:reduce){.eye-ring,.eye-iris{filter:none}}
+
+/* ---- sunlit-water theme ---- */
+body{background:radial-gradient(120% 80% at 30% 0%,#1f4a43 0%,transparent 60%),radial-gradient(90% 70% at 85% 100%,#1a3f3a 0%,transparent 65%),linear-gradient(180deg,#123532,#0b2523 70%,#0a201f);background-attachment:fixed}
+.water-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.water-bg::before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse 34% 8% at 30% 30%,rgba(232,200,115,.10),transparent 70%),radial-gradient(ellipse 30% 6% at 70% 55%,rgba(232,200,115,.08),transparent 70%),radial-gradient(ellipse 40% 7% at 45% 78%,rgba(168,224,212,.07),transparent 70%),radial-gradient(ellipse 26% 5% at 15% 62%,rgba(232,200,115,.07),transparent 70%);animation:shimmer 18s ease-in-out infinite alternate}
+@keyframes shimmer{to{transform:translate(3%,-2%) scale(1.06) rotate(1deg)}}
+.spark{position:absolute;width:var(--s,10px);height:var(--s,10px);border-radius:50%;background:radial-gradient(circle,#fffbe8 0 18%,rgba(255,240,190,.55) 30%,transparent 62%);opacity:0;animation:twinkle var(--d,4s) ease-in-out var(--dl,0s) infinite}
+.spark::before,.spark::after{content:"";position:absolute;left:50%;top:50%;width:260%;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,248,220,.85),transparent);transform:translate(-50%,-50%)}
+.spark::after{transform:translate(-50%,-50%) rotate(90deg)}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5)}45%{opacity:var(--o,.8);transform:scale(1)}60%{opacity:calc(var(--o,.8)*.6)}}
+html.v-home .water-bg{display:none}
+.stop-txt{background:rgba(242,234,210,.95);color:var(--ink-dark);border-color:var(--ink-dark);box-shadow:3px 3px 0 rgba(0,0,0,.45)}
+.stop-txt b{color:var(--ink-dark)}
+.stop-txt small{color:#1f6f66}
+.stone{color:var(--ink-dark)}
+.stop[aria-expanded="true"] .stone{color:var(--ink-dark)}
+.toast{background:var(--panel-2);border-color:var(--select);box-shadow:3px 3px 0 rgba(0,0,0,.45)}
+.btn{border-color:var(--select);color:var(--select);box-shadow:3px 3px 0 rgba(0,0,0,.4)}
+.btn:hover{background:var(--select);color:var(--ink-dark)}
+.proj-head .c{color:var(--ink-dark);background:var(--select);border-color:var(--select);box-shadow:2px 2px 0 rgba(0,0,0,.4)}
+.idx:hover,.card:hover{border-color:var(--select);box-shadow:4px 4px 0 rgba(0,0,0,.4)}
+.intro-text .hello b,.contact h2 em,.intro h1 em{color:var(--select);background:none;text-shadow:0 0 18px rgba(232,200,115,.45)}
+.river-hero .rh-copy h1,.river-hero .rh-copy h1 em{color:#fff}
+.river-hero .rh-copy h1 em{background:none;text-shadow:0 2px 3px rgba(8,18,8,.6),0 0 26px rgba(8,18,8,.7)}
+nav a[aria-current="page"]{color:var(--select);text-decoration-color:var(--select)}
+.bar{background:color-mix(in srgb,#0d2b29 86%,transparent)}
+.brand span{color:var(--fg)}
+.kit li::marker{color:var(--select)}
+.kit div,.idx,.card,.mat,.sw{background:color-mix(in srgb,var(--panel) 70%,transparent)}
+.sec-head .code{-webkit-text-stroke:2px #e8d9a8}
+.spine{background:repeating-linear-gradient(90deg,transparent 0 1.5px,rgba(168,224,212,.55) 1.5px 3px,transparent 3px 4.6px)}
+.spine i{background:repeating-linear-gradient(180deg,rgba(255,248,220,0) 0 22px,rgba(255,248,220,.75) 22px 28px,rgba(255,248,220,0) 28px 60px)}
+.flow .proj::before,.flow .sec-head::before{box-shadow:0 0 0 4px #0d2b29,0 0 14px rgba(232,200,115,.4)}
+.stage-btn[aria-pressed="true"] b,.stage-btn[aria-pressed="true"] .n{color:var(--select)}
+.slot .box.empty,.pend-box{border-color:#3f6a65}
+.links a:hover{color:var(--select)}
+
+/* ---- clean section buttons ---- */
+.stop .stone,.stop:nth-child(n) .stone{width:56px;height:56px;border-radius:50%!important;background:var(--select)!important;color:var(--ink-dark);font:800 24px/1 var(--display);text-shadow:none;border:3px solid #f7f1df!important;box-shadow:0 6px 16px rgba(0,0,0,.4)!important;animation:none;transition:transform .2s,box-shadow .2s}
+.stop{transform:translate(-28px,-28px);gap:14px}
+.stop.left{transform:translate(calc(-100% + 28px),-28px)}
+.stop:hover .stone,.stop:focus-visible .stone{transform:scale(1.1);box-shadow:0 0 0 6px rgba(232,200,115,.35),0 8px 18px rgba(0,0,0,.45)!important}
+.stop[aria-expanded="true"] .stone{background:#f7f1df!important;border-color:var(--select)!important}
+.stop.soon-stop .stone{background:rgba(13,43,41,.75)!important;color:var(--muted);border:2px dashed #a6bfb5!important}
+.stop-txt{padding:9px 14px;border:0;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+@media (max-width:560px){.stop .stone,.stop:nth-child(n) .stone{width:46px;height:46px;font-size:20px}.stop{transform:translate(-23px,-23px)}.stop.left{transform:translate(calc(-100% + 23px),-23px)}}
+/* ---- sword cursor ---- */
+html,body{cursor:url(img/cursor-sword.png) 8 8,auto}
+a,button,[role="button"],.stop,.thumb-btn,.slide,.hero-shot,.idx,.card,label,summary{cursor:url(img/cursor-sword-hover.png) 8 8,pointer!important}
+video,input,textarea{cursor:auto}
+</style>
+
+<header class="bar"><div class="wrap">
+  <a class="brand" href="#top" id="homeBtn" aria-label="Home: back to the top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7" fill="none" stroke="#f07a45" stroke-width="1.8" stroke-linejoin="round"/><path d="M5.5 9.5V20h13V9.5" fill="none" stroke="#f07a45" stroke-width="1.6"/><path d="M10 20v-5.5a2 2 0 014 0V20" fill="none" stroke="#f07a45" stroke-width="1.4"/></svg>
+    <span class="brand-txt"><span id="brandName">Amolika Mehta</span><small>3rd Year · BSc Animation</small></span>
+  </a>
+  <nav aria-label="Sections"><a href="#about" data-view="about">About</a><a href="#section-a" data-view="A">Section A</a><a href="#section-b" data-view="B">Section B</a><a href="#section-c" data-view="C">Section C</a><a href="#section-d" data-view="D">Section D</a><a href="#section-e" data-view="E">Section E</a><a href="#contact" data-view="contact">Contact</a><img class="insd" src="img/insd-logo.webp" alt="International School of Design" width="347" height="273"></nav>
+</div></header>
+
+<div class="water-bg" id="waterBg" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="inkFlow" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.011 0.018" numOctaves="2" seed="4" result="n"><animate attributeName="baseFrequency" dur="16s" values="0.011 0.018;0.014 0.012;0.010 0.020;0.011 0.018" repeatCount="indefinite"/></feTurbulence>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G"><animate attributeName="scale" dur="7s" values="12;20;12" repeatCount="indefinite"/></feDisplacementMap>
+</filter>
+<filter id="inkFlowIris" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.03 0.04" numOctaves="1" seed="9" result="n"><animate attributeName="baseFrequency" dur="11s" values="0.03 0.04;0.04 0.028;0.03 0.04" repeatCount="indefinite"/></feTurbulence>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+</filter></defs></svg>
+<div class="eye-bg" id="eyeBg" aria-hidden="true"><div class="eye-ring"></div><div class="eye-iris"></div></div>
+<main class="wrap">
+  <section class="river-hero" id="top" aria-label="Choose a section">
+    <canvas id="river" aria-hidden="true"></canvas><canvas id="water" aria-hidden="true"></canvas><canvas id="ink" aria-hidden="true"></canvas>
+    <div class="rh-copy">
+      <span class="label">3D Artist · Modeling · Texturing · Rigging · Animation · Dynamics &amp; FX · Rendering</span>
+      <h1>Small worlds, built <em>by hand.</em></h1>
+      <p>Follow the river. Press a section to open it.</p>
+    </div>
+    <div class="stops" id="stops">
+      <button class="stop" type="button" data-sec="A" aria-controls="flowA" aria-expanded="false"><span class="stone">A</span><span class="stop-txt"><b>Modeling, Texturing &amp; Rendering</b><small id="stopAState">6 projects · Press to open</small></span></button>
+      <button class="stop" type="button" data-sec="B" aria-controls="flowB" aria-expanded="false"><span class="stone">B</span><span class="stop-txt"><b>Animation and Rigging</b><small id="stopBState">8 projects · Press to open</small></span></button>
+      <button class="stop" type="button" data-sec="C" aria-controls="flowC" aria-expanded="false"><span class="stone">C</span><span class="stop-txt"><b>Dynamics &amp; Effects</b><small id="stopCState">6 projects · Press to open</small></span></button>
+      <button class="stop" type="button" data-sec="D" aria-controls="flowD" aria-expanded="false"><span class="stone">D</span><span class="stop-txt"><b>Grooming</b><small id="stopDState">1 project · Press to open</small></span></button>
+      <button class="stop" type="button" data-sec="E" aria-controls="flowE" aria-expanded="false"><span class="stone">E</span><span class="stop-txt"><b>Effects &amp; Destruction</b><small id="stopEState">4 projects · Press to open</small></span></button>
+    </div>
+  </section>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+
+  <section id="about" class="view-page" hidden>
+    <div class="head"><div><span class="label">Introduction</span></div></div>
+    
+    <div class="about">
+      <div class="intro-text">
+        <p class="hello">Hi there! I am <b>Amolika Mehta</b>, a 3rd year student of Bachelor of Science in Animation studying at the International School of Design in Pune. Welcome to my Autodesk Maya portfolio!</p>
+        <p>For the past several months, I have been working hard across the entire 3D pipeline, including modeling, texturing, lighting, rendering, dynamics and FX.</p>
+        <p>My absolute favourite part of this journey has been animation. Bringing movement to 3D models has been such an incredible experience.</p>
+        <p>Take a look around! If you have any questions or just want to connect, feel free to reach out. Thank you for visiting!</p>
+      </div>
+      <div class="kit" aria-label="Toolkit">
+        <div><span>Modeling</span><ul><li>Maya</li></ul></div>
+        <div><span>Texturing</span><ul><li>Adobe Photoshop</li><li>Hypershade</li><li>UVs</li></ul></div>
+        <div><span>Rigging</span><ul><li>Facial rig</li><li>Character rig</li></ul></div>
+        <div><span>Animation</span><ul><li>Purposeful walk</li><li>Run cycle</li><li>Facial expressions</li><li>Voice editing</li><li>Advertisement</li></ul></div>
+        <div><span>Lighting &amp; rendering</span><ul><li>Arnold</li><li>Hardware render</li><li>Skydome light</li><li>Area light</li><li>Directional light</li><li>Atmosphere volume</li></ul></div>
+        <div><span>Dynamics</span><ul><li>Cloth</li><li>XGen grooming</li><li>Crowd simulation</li></ul></div>
+      </div>
+    </div>
+      <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </section>
+
+  <div class="flow" id="flowA" hidden>
+    <div class="spine" aria-hidden="true"><i></i></div>
+  <div class="sec-head" id="section-a">
+    <div class="row">
+      <div class="code">A</div>
+      <div>
+        <span class="label">Section A · 6 projects</span>
+        <h2>Modeling, Texturing &amp; Rendering</h2>
+        <p>A cartoon character, a stylized house, cinematic cars, a vehicle turnaround, a storytelling prop and a story scene.</p>
+      </div>
+    </div>
+    <div class="index" role="navigation" aria-label="Section A projects">
+      <a class="idx" href="#a1"><span class="im"><img src="img/char-34-sm.webp" alt="" loading="lazy"></span><span class="c">A.1</span><b>Cartoon Character</b></a>
+      <a class="idx" href="#a2"><span class="im"><img src="img/render-front-sm.webp" alt="" loading="lazy"></span><span class="c">A.2</span><b>Stylized House</b></a>
+      <a class="idx" href="#a3"><span class="im"><img src="img/car-drone-hero-sm.webp" alt="" loading="lazy"></span><span class="c">A.3</span><b>Cinematic Car Render</b></a>
+      <a class="idx" href="#a4"><span class="im"><img src="img/van-front34-sm.webp" alt="" loading="lazy"></span><span class="c">A.4</span><b>Van Turnaround</b></a>
+      <a class="idx" href="#a5"><span class="im"><img src="img/gun-floor-sm.webp" alt="" loading="lazy"></span><span class="c">A.5</span><b>Revolver Story Render</b></a>
+      <a class="idx" href="#a6"><span class="im"><img src="img/bike-street-sm.webp" alt="" loading="lazy"></span><span class="c">A.6</span><b>Bicycle Story Scene</b></a>
+    </div>
+  </div>
+
+  <div id="projects-first"></div>
+
+  <!-- A.2 HOUSE -->
+  <article class="proj" id="a2">
+    <div class="proj-head"><span class="c">A.2</span><h2>Stylized House</h2><div class="tags"><span class="tag">Modeling</span><span class="tag">Texturing</span><span class="tag">Rendering</span></div></div>
+    <p class="proj-desc">I modeled a stylized house with hand-built roof tiles, stone details and a courtyard, then textured, lit and rendered it.</p>
+    <p class="used"><span>Used</span> HDRI · Adobe Photoshop</p>
+
+    <div id="viewport" class="editor">
+      <div class="vp" id="vp" role="button" tabindex="0" aria-label="Open the current view full size">
+        <div class="hud tl">Persp · <span class="stage" id="hudStage">Final render</span><br><span id="hudMode"></span></div>
+        <div class="hud tr">2048 × 2048</div>
+        <div class="hud bl" id="hudCount">05 / 05</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><span class="label">Outliner · Stylized House</span><button class="linkbtn" id="autoBtn" type="button" style="font-size:13px">Play</button></div>
+        <div class="stages" id="stages" role="group" aria-label="Production stage"></div>
+        <p class="stage-note" id="stageNote"></p>
+        <div class="panel-foot"><span style="color:var(--muted)">Click the image to view it full size.</span></div>
+      </div>
+    </div>
+
+    <div class="scene">
+      <div class="scene-head"><h3>Materials</h3><p>The main colours, picked from the final render.</p></div>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <div class="scene">
+      <div class="scene-head"><h3>All frames</h3><p>Final renders, then wireframes and orthographic views.</p></div>
+      <div class="thumbs house-gallery" id="houseGallery"></div>
+    </div>
+  </article>
+
+  <!-- A.3 / A.4 / A.6 are built from data below -->
+  <div id="projects"></div>
+    <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </div>
+
+  <div class="flow" id="flowB" hidden>
+    <div class="spine" aria-hidden="true"><i></i></div>
+    <div class="sec-head" id="section-b">
+      <div class="row">
+        <div class="code">B</div>
+        <div>
+          <span class="label">Section B · 8 projects</span>
+          <h2>Animation and Rigging</h2>
+          <p>Character rigs, animation tests and finished shots, from the controls to the final motion.</p>
+        </div>
+      </div>
+    <div class="index" role="navigation" aria-label="Projects">
+      <a class="idx" href="#b1"><span class="im"><img src="img/walk-side-0.webp" alt="" loading="lazy"></span><span class="c">B.1</span><b>Run Cycle and Purposeful Walk</b></a>
+      <a class="idx" href="#b2"><span class="im"><img src="img/face-rig-0.webp" alt="" loading="lazy"></span><span class="c">B.2</span><b>Facial Rig</b></a>
+      <a class="idx" href="#b3"><span class="im"><img src="img/character-rig-0.webp" alt="" loading="lazy"></span><span class="c">B.3</span><b>Character Rig</b></a>
+      <a class="idx" href="#b4"><span class="im"><img src="img/car-commercial-0.webp" alt="" loading="lazy"></span><span class="c">B.4</span><b>Car Commercial</b></a>
+      <a class="idx" href="#b5"><span class="im"><img src="img/ball-throw-0.webp" alt="" loading="lazy"></span><span class="c">B.5</span><b>Ball Throwing</b></a>
+      <a class="idx" href="#b6"><span class="im"><img src="img/pick-up-0.webp" alt="" loading="lazy"></span><span class="c">B.6</span><b>Picking Up an Object</b></a>
+      <a class="idx" href="#b7"><span class="im"><img src="img/monster-truck-0.webp" alt="" loading="lazy"></span><span class="c">B.7</span><b>Monster Truck</b></a>
+      <a class="idx" href="#b8"><span class="im"><img src="img/voice-cover-0.webp" alt="" loading="lazy"></span><span class="c">B.8</span><b>Voice Cover</b></a>
+    </div>
+    </div>
+    <article class="proj" id="b1">
+      <div class="proj-head"><span class="c">B.1</span><h2>Run Cycle and Purposeful Walk</h2><div class="tags"><span class="tag">Purposeful walk</span><span class="tag">Run cycle</span><span class="tag">Body mechanics</span></div></div>
+      <p class="proj-desc">I animated a purposeful walk for a mannequin character carrying a gun, focusing on weight, timing, foot placement and confident poses, used it in a short shot, then animated a run cycle from two camera views.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Viewport breakdown</h3><p>The rig and controls, from the side and the front.</p></div>
+        <figure class="vid-wrap">
+          <video id="walkVpVid" poster="img/walk-viewport-0.webp" loop playsinline controls preload="metadata" aria-label="Viewport breakdown of the purposeful walk" style="aspect-ratio:1530/730"><source src="vid/walk-viewport.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Purposeful walk</h3><p>Side and front views. Plays on a loop.</p></div>
+        <div class="vid-pair">
+          <figure class="vid-wrap">
+            <video id="walkSideVid" poster="img/walk-side-0.webp" loop playsinline controls preload="metadata" aria-label="Purposeful walk, side view" style="aspect-ratio:4/3"><source src="vid/walk-side.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Side</figcaption>
+          </figure>
+          <figure class="vid-wrap">
+            <video id="walkFrontVid" poster="img/walk-front-0.webp" loop playsinline controls preload="metadata" aria-label="Purposeful walk, front view" style="aspect-ratio:4/3"><source src="vid/walk-front.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Front</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Shot scene</h3><p>The walk used in a short shot.</p></div>
+        <figure class="vid-wrap" style="max-width:760px;margin-inline:auto">
+          <video id="walkShotVid" poster="img/walk-shot-0.webp" loop playsinline controls preload="metadata" aria-label="Purposeful walk in a shot scene" style="aspect-ratio:4/3"><source src="vid/walk-shot.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+          <div class="scene">
+        <div class="scene-head"><h3>Run cycle</h3><p>The same run from two camera views. Plays on a loop.</p></div>
+        <div class="vid-pair">
+          <figure class="vid-wrap">
+            <video id="runV1Vid" poster="img/run-view1-0.webp" loop playsinline controls preload="metadata" aria-label="Run cycle, view 1" style="aspect-ratio:1958/1086"><source src="vid/run-view1.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">View 1</figcaption>
+          </figure>
+          <figure class="vid-wrap">
+            <video id="runV2Vid" poster="img/run-view2-0.webp" loop playsinline controls preload="metadata" aria-label="Run cycle, view 2" style="aspect-ratio:1958/1086"><source src="vid/run-view2.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">View 2</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+    <article class="proj" id="b2">
+      <div class="proj-head"><span class="c">B.2</span><h2>Facial Rig</h2><div class="tags"><span class="tag">Rigging</span><span class="tag">Facial controls</span><span class="tag">Expressions</span></div></div>
+      <p class="proj-desc">I built the facial rig for a cartoon character, with controls for the brows, eyes, smile and frown, and mouth shapes, then tested it with expressions.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Rig walkthrough</h3><p>The face controls, one by one.</p></div>
+        <figure class="vid-wrap">
+          <video id="faceRigVid" poster="img/face-rig-0.webp" loop playsinline controls preload="metadata" aria-label="Facial rig walkthrough" style="aspect-ratio:16/9"><source src="vid/face-rig.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Test animation results</h3><p>Two expressions posed with the rig. Click to enlarge.</p></div>
+        <div class="face-pair">
+          <button class="thumb-btn" type="button" data-k="face-test-1" data-list="face-test-1,face-test-2"><img src="img/face-test-1.webp" alt="Facial rig test: stern brows" loading="lazy"><span>Stern brows</span></button>
+          <button class="thumb-btn" type="button" data-k="face-test-2" data-list="face-test-1,face-test-2"><img src="img/face-test-2.webp" alt="Facial rig test: wide eyes and open mouth" loading="lazy"><span>Wide eyes, open mouth</span></button>
+        </div>
+      </div>
+    </article>
+    <article class="proj" id="b3">
+      <div class="proj-head"><span class="c">B.3</span><h2>Character Rig</h2><div class="tags"><span class="tag">Rigging</span><span class="tag">Controls</span><span class="tag">Test animation</span></div></div>
+      <p class="proj-desc">I rigged a full character, with root, stomach, arm, hand, finger and foot controls (toe roll, heel twist), then tested it with a wave animation.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Rig walkthrough</h3><p>Building the controls, from the feet up to the fingers.</p></div>
+        <figure class="vid-wrap">
+          <video id="charRigVid" poster="img/character-rig-0.webp" loop playsinline controls preload="metadata" aria-label="Character rig walkthrough" style="aspect-ratio:16/9"><source src="vid/character-rig.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Test animation: waving</h3><p>A second character, rigged with the same technique, waving. Plays on a loop.</p></div>
+        <figure class="vid-wrap" style="max-width:520px;margin-inline:auto">
+          <video id="waveVid" poster="img/rig-test-wave-0.webp" loop playsinline controls preload="metadata" aria-label="Waving test animation" style="aspect-ratio:4/3"><source src="vid/rig-test-wave.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="b4">
+      <div class="proj-head"><span class="c">B.4</span><h2>Car Commercial</h2><div class="tags"><span class="tag">Advertising</span><span class="tag">Camera</span><span class="tag">Editing</span></div></div>
+      <p class="proj-desc">I created a short Volkswagen car commercial with cinematic camera moves, lighting and editing, plus a looping orbit of the car.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Volkswagen car</h3><p>A slow orbit around the car, on a smooth loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="adTurnVid" poster="img/car-turntable-0.webp" controls loop playsinline preload="metadata" aria-label="Volkswagen car orbit, looping" style="aspect-ratio:16/9"><source src="vid/car-turntable-loop.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Car commercial</h3><p>24 seconds. Turn the sound on in the player.</p></div>
+        <figure class="vid-wrap">
+          <video id="adVid" poster="img/car-commercial-0.webp" loop playsinline controls preload="metadata" aria-label="Car TV commercial" style="aspect-ratio:16/9"><source src="vid/car-commercial.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="b5">
+      <div class="proj-head"><span class="c">B.5</span><h2>Ball Throwing</h2><div class="tags"><span class="tag">Animation</span><span class="tag">Timing</span><span class="tag">Arcs</span></div></div>
+      <p class="proj-desc">I animated a character throwing a ball into the air, focusing on the arm motion, timing and the arc of the ball.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>The shot</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap" style="max-width:640px;margin-inline:auto">
+          <video id="ballVid" poster="img/ball-throw-0.webp" loop playsinline controls preload="metadata" aria-label="Character throwing a ball in the air" style="aspect-ratio:4/3"><source src="vid/ball-throw.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+</article>
+    <article class="proj" id="b6">
+      <div class="proj-head"><span class="c">B.6</span><h2>Picking Up an Object</h2><div class="tags"><span class="tag">Animation</span><span class="tag">Weight</span><span class="tag">Body mechanics</span></div></div>
+      <p class="proj-desc">I animated a character bending down, picking up a box and standing up with it, focusing on weight and balance.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>The shot</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap" style="max-width:900px;margin-inline:auto">
+          <video id="pickVid" poster="img/pick-up-0.webp" loop playsinline controls preload="metadata" aria-label="Character picking up an object" style="aspect-ratio:1958/1086"><source src="vid/pick-up.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+        </article>
+    <article class="proj" id="b7">
+      <div class="proj-head"><span class="c">B.7</span><h2>Monster Truck</h2><div class="tags"><span class="tag">Vehicle animation</span><span class="tag">Suspension</span><span class="tag">Bumps</span></div></div>
+      <p class="proj-desc">I animated a monster truck rolling over bumpy ground, with the body and wheels reacting to every bump.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>The shot</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="truckVid" poster="img/monster-truck-0.webp" loop playsinline controls preload="metadata" aria-label="Monster truck driving over bumpy ground" style="aspect-ratio:16/9"><source src="vid/monster-truck.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="b8">
+      <div class="proj-head"><span class="c">B.8</span><h2>Voice Cover</h2><div class="tags"><span class="tag">Voice editing</span><span class="tag">Acting</span><span class="tag">Kung Fu Panda</span></div></div>
+      <p class="proj-desc">I made a voice cover inspired by Kung Fu Panda, editing the voice and animating the characters to match it.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Voice cover</h3><p>Turn the sound on in the player.</p></div>
+        <figure class="vid-wrap">
+          <video id="voiceVid" poster="img/voice-cover-0.webp" loop playsinline controls preload="metadata" aria-label="Voice cover inspired by Kung Fu Panda" style="aspect-ratio:1958/888"><source src="vid/voice-cover.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </div>
+
+  <div class="flow" id="flowC" hidden>
+    <div class="spine" aria-hidden="true"><i></i></div>
+    <div class="sec-head" id="section-c">
+      <div class="row">
+        <div class="code">C</div>
+        <div>
+          <span class="label">Section C · 6 projects</span>
+          <h2>Dynamics &amp; Effects</h2>
+          <p>Simulations and animation that move: particles, cloth, jiggle and natural secondary motion.</p>
+        </div>
+      </div>
+
+    <div class="index" role="navigation" aria-label="Projects">
+      <a class="idx" href="#c1"><span class="im"><img src="img/leaves-v2-sm.webp" alt="" loading="lazy"></span><span class="c">C.1</span><b>Falling Leaves</b></a>
+      <a class="idx" href="#c2"><span class="im"><img src="img/car-reveal-0.webp" alt="" loading="lazy"></span><span class="c">C.2</span><b>Car Cloth Reveal</b></a>
+      <a class="idx" href="#c3"><span class="im"><img src="img/curtains-0.webp" alt="" loading="lazy"></span><span class="c">C.3</span><b>Window &amp; Curtains</b></a>
+      <a class="idx" href="#c4"><span class="im"><img src="img/cape-0.webp" alt="" loading="lazy"></span><span class="c">C.4</span><b>Hero with Cape</b></a>
+      <a class="idx" href="#c5"><span class="im"><img src="img/cloth-walk-viewport-0.webp" alt="" loading="lazy"></span><span class="c">C.5</span><b>Walk Simulation with Cloth</b></a>
+      <a class="idx" href="#c6"><span class="im"><img src="img/body-bounce-0.webp" alt="" loading="lazy"></span><span class="c">C.6</span><b>Heavy Character Walk</b></a>
+    </div>
+    </div>
+    <article class="proj" id="c1">
+      <div class="proj-head"><span class="c">C.1</span><h2>Falling Leaves</h2><div class="tags"><span class="tag">Dynamics</span><span class="tag">Particles</span><span class="tag">Secondary motion</span></div></div>
+      <p class="proj-desc">I created a tree scene where leaves fall and gather on the ground using particle dynamics.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Simulation</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="leafVid" poster="img/leaves-v2-0.webp" loop playsinline controls preload="metadata" aria-label="Falling leaves simulation" style="aspect-ratio:16/9"><source src="vid/falling-leaves-v2.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="c2">
+      <div class="proj-head"><span class="c">C.2</span><h2>Car Cloth Reveal</h2><div class="tags"><span class="tag">Cloth simulation</span><span class="tag">Collisions</span><span class="tag">Timing</span></div></div>
+      <p class="proj-desc">I covered a vintage car with cloth and simulated it being pulled away to reveal the car.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Two views. Plays on a loop.</p></div>
+        <div class="vid-pair">
+          <figure class="vid-wrap">
+            <video id="revealVid1" poster="img/car-reveal-v1.webp" loop playsinline controls preload="metadata" aria-label="Car cloth reveal, view 1" style="aspect-ratio:16/9"><source src="vid/car-reveal-v1.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">View 1 · Three-quarter</figcaption>
+          </figure>
+          <figure class="vid-wrap">
+            <video id="revealVid2" poster="img/car-reveal-v2.webp" loop playsinline controls preload="metadata" aria-label="Car cloth reveal, view 2" style="aspect-ratio:16/9"><source src="vid/car-reveal-v2.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">View 2 · Side</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+    <article class="proj" id="c3">
+      <div class="proj-head"><span class="c">C.3</span><h2>Window &amp; Curtains</h2><div class="tags"><span class="tag">Cloth simulation</span><span class="tag">Lighting</span><span class="tag">Storytelling</span></div></div>
+      <p class="proj-desc">I simulated curtains blowing in the wind beside a sunlit window to create a calm, quiet mood.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Two shots. Plays on a loop.</p></div>
+        <div class="vid-pair">
+          <figure class="vid-wrap">
+            <video id="curtainVid1" poster="img/curtains-s1.webp" loop playsinline controls preload="metadata" aria-label="Curtains, window shot" style="aspect-ratio:16/9"><source src="vid/curtains-shot1.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Window</figcaption>
+          </figure>
+          <figure class="vid-wrap">
+            <video id="curtainVid2" poster="img/curtains-s2.webp" loop playsinline controls preload="metadata" aria-label="Curtains, floor shadow shot" style="aspect-ratio:16/9"><source src="vid/curtains-shot2.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Shadows on the floor</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+    <article class="proj" id="c4">
+      <div class="proj-head"><span class="c">C.4</span><h2>Hero with Cape</h2><div class="tags"><span class="tag">Cloth simulation</span><span class="tag">Animation</span><span class="tag">Lighting</span></div></div>
+      <p class="proj-desc">I animated an armoured hero in a strong pose with a cape reacting to the wind.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Viewport breakdown</h3><p>The cloth mesh on the cape, seen from two views.</p></div>
+        <figure class="vid-wrap">
+          <video id="capeVpVid" poster="img/cape-vp-0.webp" loop playsinline controls preload="metadata" aria-label="Viewport breakdown of the cape cloth simulation" style="aspect-ratio:16/9"><source src="vid/hero-cape-viewport.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="capeVid" poster="img/cape-0.webp" loop playsinline controls preload="metadata" aria-label="Hero with cape cloth simulation" style="aspect-ratio:16/9"><source src="vid/hero-cape.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="c5">
+      <div class="proj-head"><span class="c">C.5</span><h2>Walk Simulation with Cloth</h2><div class="tags"><span class="tag">Cloth simulation</span><span class="tag">Walk cycle</span></div></div>
+      <p class="proj-desc">I animated my cartoon character walking and simulated his clothes so they move naturally with each step.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Viewport breakdown</h3><p>The walk and cloth in the 3D viewport.</p></div>
+        <figure class="vid-wrap">
+          <video id="clothVpVid" poster="img/cloth-walk-viewport-0.webp" loop playsinline controls preload="metadata" aria-label="Viewport breakdown of the walking cloth simulation" style="aspect-ratio:16/9"><source src="vid/cloth-walk-viewport.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="clothVid" poster="img/cloth-walk-v2-0.webp" loop playsinline controls preload="metadata" aria-label="Walking character with cloth simulation" style="aspect-ratio:16/9"><source src="vid/cloth-walk-v2.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="c6">
+      <div class="proj-head"><span class="c">C.6</span><h2>Heavy Character Walk</h2><div class="tags"><span class="tag">Secondary motion</span><span class="tag">Jiggle</span><span class="tag">Walk cycle</span></div></div>
+      <p class="proj-desc">I animated a heavy character's walk with body bounce and jiggle to show weight and secondary motion.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Viewport breakdown</h3><p>The jiggle on the bare body in the viewport.</p></div>
+        <figure class="vid-wrap">
+          <video id="bounceVpVid" poster="img/body-bounce-viewport-0.webp" loop playsinline controls preload="metadata" aria-label="Viewport breakdown of the body bounce walk" style="aspect-ratio:16/9"><source src="vid/body-bounce-viewport.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="bounceVid" poster="img/body-bounce-0.webp" loop playsinline controls preload="metadata" aria-label="Heavy character walk with body bounce" style="aspect-ratio:16/9"><source src="vid/body-bounce.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </div>
+
+  <div class="flow" id="flowD" hidden>
+    <div class="spine" aria-hidden="true"><i></i></div>
+    <div class="sec-head" id="section-d">
+      <div class="row">
+        <div class="code">D</div>
+        <div>
+          <span class="label">Section D · 1 project</span>
+          <h2>Grooming</h2>
+          <p>Hair and fur grooming with XGen.</p>
+        </div>
+      </div>
+    </div>
+    <article class="proj" id="d1">
+      <div class="proj-head"><span class="c">D.1</span><h2>Fox Fur Grooming</h2><div class="tags"><span class="tag">XGen</span><span class="tag">Grooming</span><span class="tag">Arnold</span></div></div>
+      <p class="proj-desc">I groomed fur on a sleepy cartoon fox using XGen, shaping the length, direction and clumping across the head, body, ears and tail, then rendered it in Arnold.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Renders</h3><p>Use the arrows to see more.</p></div>
+        <div class="slider">
+          <div class="slides" tabindex="0" aria-label="Fox fur renders">
+            <button class="slide" type="button" data-k="fur-1" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-1-sm.webp" alt="Fox fur: Full fox on its cushion" loading="lazy"><span>Full fox on its cushion</span></button>
+            <button class="slide" type="button" data-k="fur-2" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-2-sm.webp" alt="Fox fur: Face, front" loading="lazy"><span>Face, front</span></button>
+            <button class="slide" type="button" data-k="fur-3" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-3-sm.webp" alt="Fox fur: Cheek and eye close-up" loading="lazy"><span>Cheek and eye close-up</span></button>
+            <button class="slide" type="button" data-k="fur-4" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-4-sm.webp" alt="Fox fur: Head, three-quarter" loading="lazy"><span>Head, three-quarter</span></button>
+            <button class="slide" type="button" data-k="fur-5" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-5-sm.webp" alt="Fox fur: Side view on the cushion" loading="lazy"><span>Side view on the cushion</span></button>
+            <button class="slide" type="button" data-k="fur-6" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-6-sm.webp" alt="Fox fur: Tail and body fur" loading="lazy"><span>Tail and body fur</span></button>
+            <button class="slide" type="button" data-k="fur-7" data-list="fur-1,fur-2,fur-3,fur-4,fur-5,fur-6,fur-7"><img src="img/fur-7-sm.webp" alt="Fox fur: Fur close-up on the muzzle" loading="lazy"><span>Fur close-up on the muzzle</span></button>
+          </div>
+          <div class="slider-bar"><span class="slider-count label"></span><span class="slider-btns"><button class="iconbtn sl-prev" type="button" aria-label="Previous images">←</button><button class="iconbtn sl-next" type="button" aria-label="Next images">→</button></span></div>
+        </div>
+      </div>
+    </article>
+    <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </div>
+
+  <div class="flow" id="flowE" hidden>
+    <div class="spine" aria-hidden="true"><i></i></div>
+    <div class="sec-head" id="section-e">
+      <div class="row">
+        <div class="code">E</div>
+        <div>
+          <span class="label">Section E · 4 projects</span>
+          <h2>Effects &amp; Destruction</h2>
+          <p>Large-scale effects shots: volleys, impacts, debris and atmosphere.</p>
+        </div>
+      </div>
+
+    <div class="index" role="navigation" aria-label="Projects">
+      <a class="idx" href="#e1"><span class="im"><img src="img/war-arrows-0.webp" alt="" loading="lazy"></span><span class="c">E.1</span><b>War Scene: Arrows</b></a>
+      <a class="idx" href="#e2"><span class="im"><img src="img/fish-0.webp" alt="" loading="lazy"></span><span class="c">E.2</span><b>Fish</b></a>
+      <a class="idx" href="#e3"><span class="im"><img src="img/crowd-0.webp" alt="" loading="lazy"></span><span class="c">E.3</span><b>Crowd Simulation</b></a>
+      <a class="idx" href="#e4"><span class="im"><img src="img/flag-close-0.webp" alt="" loading="lazy"></span><span class="c">E.4</span><b>Flag Simulation</b></a>
+    </div>
+    </div>
+    <article class="proj" id="e1">
+      <div class="proj-head"><span class="c">E.1</span><h2>War Scene: Arrows</h2><div class="tags"><span class="tag">Particles</span><span class="tag">Procedural</span><span class="tag">Camera</span></div></div>
+      <p class="proj-desc">I created a battle scene where volleys of arrows fly over a fortress wall and strike the ground and the gate.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>The shot</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="warVid" poster="img/war-arrows-0.webp" loop playsinline controls preload="metadata" aria-label="Cinematic war scene with arrows" style="aspect-ratio:1796/754"><source src="vid/war-arrows.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="e2">
+      <div class="proj-head"><span class="c">E.2</span><h2>Fish</h2><div class="tags"><span class="tag">Particles</span><span class="tag">Schooling</span><span class="tag">Underwater</span></div></div>
+      <p class="proj-desc">I simulated a school of fish swimming underwater with rising bubbles.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Viewport breakdown</h3><p>The fish school in the 3D viewport.</p></div>
+        <figure class="vid-wrap">
+          <video id="fishVpVid" poster="img/fish-viewport-0.webp" loop playsinline controls preload="metadata" aria-label="Viewport breakdown of the fish school" style="aspect-ratio:1532/856"><source src="vid/fish-viewport.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+      <div class="scene">
+        <div class="scene-head"><h3>Final render</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="fishVid" poster="img/fish-0.webp" loop playsinline controls preload="metadata" aria-label="Fish school final render" style="aspect-ratio:16/9"><source src="vid/fish.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="e3">
+      <div class="proj-head"><span class="c">E.3</span><h2>Crowd Simulation</h2><div class="tags"><span class="tag">Crowd</span><span class="tag">Instancing</span><span class="tag">Animation</span></div></div>
+      <p class="proj-desc">I simulated a large crowd of characters moving together in formation.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Crowd simulation</h3><p>Plays on a loop.</p></div>
+        <figure class="vid-wrap">
+          <video id="crowdVid" poster="img/crowd-0.webp" loop playsinline controls preload="metadata" aria-label="Crowd simulation" style="aspect-ratio:1916/856"><source src="vid/crowd.mp4" type="video/mp4"></video>
+        </figure>
+      </div>
+    </article>
+    <article class="proj" id="e4">
+      <div class="proj-head"><span class="c">E.4</span><h2>Flag Simulation</h2><div class="tags"><span class="tag">Cloth</span><span class="tag">Wind</span><span class="tag">Dynamics</span></div></div>
+      <p class="proj-desc">I simulated a flag waving on a pole in the wind with cloth dynamics.</p>
+      <div class="scene">
+        <div class="scene-head"><h3>Flag simulation</h3><p>A close-up and a wide view of the same simulation. Plays on a loop.</p></div>
+        <div class="vid-pair">
+          <figure class="vid-wrap">
+            <video id="flagCloseVid" poster="img/flag-close-0.webp" loop playsinline controls preload="metadata" aria-label="Flag simulation, close-up" style="aspect-ratio:756/400"><source src="vid/flag-close.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Close-up</figcaption>
+          </figure>
+          <figure class="vid-wrap">
+            <video id="flagWideVid" poster="img/flag-wide-0.webp" loop playsinline controls preload="metadata" aria-label="Flag simulation, wide view" style="aspect-ratio:756/400"><source src="vid/flag-wide.mp4" type="video/mp4"></video>
+            <figcaption class="vid-cap">Wide</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+        <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </div>
+
+
+
+  <section id="contact" class="view-page" hidden>
+    <div class="contact">
+      <div>
+        <span class="label">Open to work · Studio &amp; freelance</span>
+        <h2>Need a world <em>built?</em></h2>
+        <div class="mail"><code id="email">donutmehta.26@gmail.com</code><button class="btn" id="copy" type="button">Copy email</button></div>
+      </div>
+      <div class="links">
+        <a href="https://www.behance.net/gallery/249345363/Animation-Portfolio" target="_blank" rel="noopener">Behance <span>↗</span></a>
+        <a href="https://www.instagram.com/brave1412" target="_blank" rel="noopener">Instagram <span>↗</span></a>
+        <a href="https://www.linkedin.com/in/amolika-mehta-0b405a393" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+      </div>
+    </div>
+      <div class="flow-end"><button class="btn backUp" type="button">← Back to the river</button></div>
+  </section>
+
+  <footer id="siteFoot" hidden><span>© 2026 <span id="footName">Amolika Mehta, 3rd Year BSc Animation</span> · Modeled, textured and rendered in-house</span><span>Scene saved · 0 errors · 0 warnings</span></footer>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-top"><span id="lbCap"></span><button class="iconbtn" id="lbClose" type="button">Close</button></div>
+  <div class="lb-img"><img id="lbImg" alt=""></div>
+  <div class="lb-nav"><button class="iconbtn" id="lbPrev" type="button">← Prev</button><span id="lbIdx" class="label" style="align-self:center"></span><button class="iconbtn" id="lbNext" type="button">Next →</button></div>
+</div>
+
+<script>
+/* ===== EDIT YOUR CONTENT HERE ===== */
+const IMAGES = {
+  /* A wireframes and clay */
+  "char-wire-side":{cap:"Character · wireframe, side"}, "char-wire-arm":{cap:"Character · wireframe, arm and hand"}, "char-wire-feet":{cap:"Character · wireframe, legs and shoes"}, "gun-wire-side":{cap:"Revolver · wireframe, side"}, "gun-wire-34":{cap:"Revolver · wireframe, grip 3/4"}, "gun-wire-front":{cap:"Revolver · wireframe, front"}, "gun-clay-side":{cap:"Revolver · clay, side"}, "gun-clay-34":{cap:"Revolver · clay, grip 3/4"}, "gun-clay-front":{cap:"Revolver · clay, front"}, "van-wire-side":{cap:"Van · wireframe, side"}, "van-wire-front":{cap:"Van · wireframe, front"}, "van-wire-rear":{cap:"Van · wireframe, rear"}, "bike-wire-side":{cap:"Bicycle · wireframe, side"}, "bike-wire-34":{cap:"Bicycle · wireframe, front 3/4"}, "bike-wire-front":{cap:"Bicycle · wireframe, front"}, "bike-clay-front":{cap:"Bicycle · clay, front"}, "bike-clay-34":{cap:"Bicycle · clay, front 3/4"},
+  /* B.2 facial rig tests */
+  "face-test-1":{cap:"Facial rig test · stern brows"}, "face-test-2":{cap:"Facial rig test · wide eyes, open mouth"},
+  /* A.2 house */
+  "hero":{cap:"House · final render, three-quarter"}, "render-warm":{cap:"House · warm key"}, "render-front":{cap:"House · front"},
+  "render-back":{cap:"House · back three-quarter"}, "render-street":{cap:"House · HDRI street backdrop"}, "render-top":{cap:"House · high angle"},
+  "render-back-top":{cap:"House · back, high angle"}, "render-wide-a":{cap:"House · wide"}, "render-wide-b":{cap:"House · wide, closer"},
+  "render-side":{cap:"House · lighting test, side"}, "wire-persp":{cap:"House · wireframe, perspective"}, "wire-persp-white":{cap:"House · wireframe, white"},
+  "wire-front":{cap:"House · wireframe, front"}, "wire-front-white":{cap:"House · wireframe, front, white"}, "wire-side":{cap:"House · wireframe, side"}, "wire-side-white":{cap:"House · wireframe, side, white"},
+  /* A.3 car */
+  "car-drone-hero":{cap:"Forgotten · drone view at golden hour"}, "car-drone-wide":{cap:"Forgotten · drone, framed by shrubs"},
+  "car-detail":{cap:"Forgotten · rust and peeling paint"}, "car-sunset":{cap:"Forgotten · sunset profile"},
+  "car-silhouette":{cap:"Forgotten · silhouette"}, "car-sunset-roof":{cap:"Forgotten · roof against the sun"},
+  "car-grass":{cap:"Forgotten · reclaimed by grass"}, "car-grass-close":{cap:"Forgotten · grass, closer"}, "car-clay":{cap:"Forgotten · clay render"},
+  "beetle-side":{cap:"Night Fog · side profile"}, "beetle-headlight":{cap:"Night Fog · headlight through fog"}, "beetle-rear":{cap:"Night Fog · taillights"},
+  /* A.1 character */
+  "char-front":{cap:"Character · front, T-pose"}, "char-34":{cap:"Character · 3/4 front, T-pose"}, "char-side":{cap:"Character · side, T-pose"},
+  "char-walk":{cap:"Character · walk pose, studio"}, "char-sit":{cap:"Character · sitting pose, studio"},
+  "char-park-side":{cap:"Character · walking in the park"}, "char-park-34":{cap:"Character · park path, 3/4"}, "char-park-back":{cap:"Character · walking away"},
+  "char-toon-path":{cap:"Character · on illustrated path"}, "char-toon-bench":{cap:"Character · on a park bench"},
+  /* A.5 gun */
+  "gun-floor":{cap:"Revolver · on the floor in window light"}, "gun-wall":{cap:"Revolver · on cracked plaster"}, "gun-wall-close":{cap:"Revolver · cylinder and trigger detail"},
+  "gun-studio-side":{cap:"Revolver · studio, side"}, "gun-studio-34":{cap:"Revolver · studio, grip 3/4"}, "gun-studio-close":{cap:"Revolver · studio, close"},
+  /* C.7 fur */
+  "fur-1":{cap:"Fox fur · Full fox on its cushion"},
+  "fur-2":{cap:"Fox fur · Face, front"},
+  "fur-3":{cap:"Fox fur · Cheek and eye close-up"},
+  "fur-4":{cap:"Fox fur · Head, three-quarter"},
+  "fur-5":{cap:"Fox fur · Side view on the cushion"},
+  "fur-6":{cap:"Fox fur · Tail and body fur"},
+  "fur-7":{cap:"Fox fur · Fur close-up on the muzzle"},
+  /* C.1 leaves */
+  "leaves-0":{cap:"Falling leaves · frame 5"}, "leaves-1":{cap:"Falling leaves · frame 34"}, "leaves-2":{cap:"Falling leaves · frame 62"}, "leaves-3":{cap:"Falling leaves · frame 91"},
+  /* A.4 van */
+  "van-front34":{cap:"Van · 3/4 front, studio"}, "van-front34-dark":{cap:"Van · 3/4 front, low key"}, "van-side34":{cap:"Van · high 3/4 side"},
+  /* A.6 bike */
+  "bike-street":{cap:"Bicycle · dusk bike lane"}, "bike-studio-side":{cap:"Bicycle · studio, side"}, "bike-studio-front":{cap:"Bicycle · studio, front 3/4"}, "bike-studio-rear":{cap:"Bicycle · studio, rear 3/4"},
+};
+const HOUSE_STAGES = [
+  {img:"wire-persp",  name:"Wireframe",     sub:"Perspective",    mode:"Wireframe on solid",   note:"All detail is modeled: tile rows, quoin stones, arched window frames and door planks."},
+  {img:"wire-front",  name:"Front view",    sub:"Orthographic",   mode:"Front elevation",      note:"Checking proportions: the porch gable, the round attic window and the stepped roof lines."},
+  {img:"wire-side",   name:"Side view",     sub:"Orthographic",   mode:"Side elevation",       note:"The side wing with its balcony, and how the three roofs overlap."},
+  {img:"render-side", name:"Lighting test", sub:"Side elevation", mode:"Low-key light",        note:"A low warm key against a dark sky to test shadows and the roof silhouette."},
+  {img:"hero",        name:"Final render",  sub:"Three-quarter",  mode:"Warm key · soft fill", note:"Sage plaster, terracotta tiles and cream-and-blue stone under a low warm sun."},
+];
+const HOUSE_GALLERY = ["hero","render-warm","render-front","render-back","render-street","render-top","render-back-top","render-wide-a","render-wide-b","render-side","wire-persp","wire-persp-white","wire-front","wire-front-white","wire-side","wire-side-white"];
+const PALETTE = [
+  {name:"Plaster walls",hex:"#6c8670"},{name:"Roof tiles",hex:"#d4643a"},{name:"Cream stone",hex:"#e6dbbf"},{name:"Blue stone",hex:"#6aa3c9"},
+  {name:"Courtyard",hex:"#a9471f"},{name:"Door wood",hex:"#3b1912"},{name:"Water channel",hex:"#5fa6c2"},{name:"Window trim",hex:"#efe6cd"},
+];
+const VIEWERS = {"a1": {"title": "Cartoon Character", "hud": "Shot cam", "fx": "slide", "ar": "16/9", "res": "960 × 540", "stages": [["char-wire-side", "Wireframe", "Side", "Wireframe on solid", "Clean quad topology from the head down to the shoes, with the glasses modeled separately."], ["char-wire-arm", "Arm and hand", "Side", "Wireframe on solid", "Edge loops around the shoulder and wrist so the arm bends cleanly."], ["char-wire-feet", "Legs and shoes", "Front", "Wireframe on solid", "Even quads down the trouser legs, with the shoes modeled as their own shapes."], ["char-walk", "Walk pose", "Studio", "Key + rim light", "Mid-stride, arms swinging, weight on the front foot."], ["char-sit", "Sitting pose", "Studio", "Key + rim light", "The same rig posed seated, to show the model deforms cleanly."], ["char-park-side", "Park walk", "Side", "HDRI backplate", "Dropped into a real park photo to see him in a world."], ["char-park-34", "Park path", "Three-quarter", "HDRI backplate", "Walking along the path toward camera."], ["char-park-back", "Walking away", "Back", "HDRI backplate", "The back of the model, heading off down the path."], ["char-toon-path", "Storybook path", "2D backdrop", "Toon background", "Placed on an illustrated background to match his cartoon style."], ["char-toon-bench", "Park bench", "2D backdrop", "Toon background", "Taking a rest in an illustrated city park."]]}, "a3": {"title": "Cinematic Car", "hud": "Cine cam", "fx": "wipe", "ar": "16/9", "res": "2.39 : 1 crop", "lbx": true, "stages": [["car-clay", "Clay", "Model check", "Clay shader", "The sedan in plain clay, to check the forms before materials."], ["car-detail", "Rust detail", "Close-up", "Golden hour", "Layered rust, bare metal and peeling paint on the body."], ["car-drone-hero", "Forgotten", "Drone", "Golden hour", "A high drone view: the old car alone in the desert."], ["car-drone-wide", "Framed", "Drone, wide", "Golden hour", "Dry shrubs frame the car and lead the eye in."], ["car-sunset", "Sunset profile", "Low angle", "Sun in frame", "The sun sits behind the roof and rims the body in light."], ["car-silhouette", "Silhouette", "Low angle", "Backlit", "The car reduced to a dark shape against the sky."], ["car-grass", "Reclaimed", "Grass", "Overcast", "Nature taking the car back."], ["beetle-headlight", "Night Fog", "Headlight", "Volumetric fog", "A second scene: one headlight cutting through the fog."], ["beetle-rear", "Taillights", "Rear", "Volumetric fog", "Red taillights glowing in the dark."], ["beetle-side", "The reveal", "Side profile", "Volumetric fog", "The full silhouette, lit only by its own lights."]]}, "a4": {"title": "Van", "hud": "Studio cam", "fx": "zoom", "ar": "16/9", "res": "960 × 540", "stages": [["van-wire-side", "Wireframe", "Side", "Wireframe on solid", "Windows, wheel arches, vents and the trim line are all modeled."], ["van-wire-front", "Wireframe", "Front", "Wireframe on solid", "The V-shaped nose, round headlights, badge and mirrors."], ["van-wire-rear", "Wireframe", "Rear", "Wireframe on solid", "The rear window, engine lid and tail lights."], ["van-front34", "Studio", "3/4 front", "Soft key", "The two-tone camper on a seamless studio backdrop."], ["van-front34-dark", "Low key", "3/4 front", "Hard key", "A darker light setup to bring out the chrome and body curves."], ["van-side34", "High angle", "3/4 side", "Soft key", "From above, showing the roof windows and side panels."]]}, "a5": {"title": "Revolver", "hud": "Prop cam", "fx": "flash", "ar": "16/9", "res": "960 × 540", "stages": [["gun-wire-side", "Wireframe", "Side", "Wireframe on solid", "Every part is modeled: barrel, cylinder, hammer, trigger guard and grip."], ["gun-wire-34", "Wireframe", "Grip 3/4", "Wireframe on solid", "The grip, hammer and frame from the back."], ["gun-wire-front", "Wireframe", "Front", "Wireframe on solid", "Looking down the barrel at the cylinder and sight."], ["gun-clay-side", "Clay", "Side", "Clay shader", "The forms in plain grey, before any materials."], ["gun-clay-34", "Clay", "Grip 3/4", "Clay shader", "The grip, cylinder and trigger guard in clay."], ["gun-clay-front", "Clay", "Front", "Clay shader", "The cylinder and barrel from the front, in clay."], ["gun-studio-side", "Studio", "Side", "Soft box", "The revolver in clean studio light to show the model."], ["gun-studio-34", "Studio", "Grip 3/4", "Soft box", "The grip, cylinder and trigger guard from the back."], ["gun-studio-close", "Studio", "Close", "Soft box", "Fluted cylinder and hammer up close."], ["gun-wall", "On plaster", "Side", "Hard window light", "Worn blued steel against cracked plaster."], ["gun-wall-close", "Detail", "Close", "Hard window light", "Edge wear on the cylinder and trigger."], ["gun-floor", "Left Behind", "Final", "Window light", "The story: a revolver left on the floor in falling light."]]}, "a6": {"title": "Bicycle", "hud": "Story cam", "fx": "iris", "ar": "16/9", "res": "960 × 540", "stages": [["bike-wire-side", "Wireframe", "Side", "Wireframe on solid", "Frame tubes, spoked wheels, mudguards, pedals and the saddle."], ["bike-wire-34", "Wireframe", "Front 3/4", "Wireframe on solid", "Bullet headlamp, swept handlebars and the front wheel."], ["bike-wire-front", "Wireframe", "Front", "Wireframe on solid", "The bike straight on: bars, lamp, forks and pedals."], ["bike-clay-front", "Clay", "Front", "Clay shader", "Straight on in plain grey, to check the forms."], ["bike-clay-34", "Clay", "Front 3/4", "Clay shader", "The whole bike in clay before the materials."], ["bike-studio-side", "Studio", "Side", "Soft key", "The bottle-green roadster on its own."], ["bike-studio-front", "Studio", "Front 3/4", "Soft key", "Bullet headlamp, swept bars and chrome."], ["bike-studio-rear", "Studio", "Rear 3/4", "Soft key", "Saddle, mudguard and the spoked rear wheel."], ["bike-street", "Dusk street", "Final", "Blue hour", "The story shot: the bike waiting on a city bike lane at dusk."]]}};
+const PROJECTS = [
+  {id:"a1", desc:"I modeled and textured a cartoon grandpa character, presented him in a clean turnaround, and posed him in a park scene.", code:"A.1", title:"Cartoon Character", first:true, tags:["Modeling","Texturing","Turnaround"],
+   brief:"Create a complete stylized/cartoon character from modeling to final texturing. Present a clean 360° turnaround showing front, 3/4 front, side, 3/4 back and back views.",
+   output:"Fully modeled and textured character with consistent proportions, clean topology and presentation renders.",
+   approach:[
+     ["The character.","A cheerful retired grandpa: bald head, thick glasses, an argyle sweater vest, a round belly and skinny legs, so the silhouette reads as a pear."],
+     ["Modeling.","Pushed cartoon proportions (big head and hands, tiny ankles) on clean quad topology that deforms well in poses."],
+     ["Texturing.","An argyle knit pattern, warm skin, dark glasses frames and leather shoes."],
+     ["Presentation.","A neutral studio T-pose turnaround, then the same character posed, walking and placed in a park."]],
+   turnNote:"Neutral grey studio, same light and lens, with the character rotated in 45° steps.",
+   turnaround:[{label:"Front",img:"char-front"},{label:"3/4 front",img:"char-34"},{label:"Side",img:"char-side"}],
+   scenes:[{title:"Posed and in a scene", note:"The finished character brought to life.", hero:"char-walk", imgs:["char-sit","char-park-side","char-park-34","char-park-back","char-toon-path","char-toon-bench"]}]},
+  {id:"a5", desc:"I modeled and textured a revolver and lit it in a dark, moody scene to tell a short story.", code:"A.5", title:"Revolver Story Render", tags:["Modeling","Materials","Storytelling"],
+   brief:"Create a detailed 3D gun model with appropriate materials and texture maps. Present it in a cinematic environment with strong composition and visual storytelling.",
+   output:"Final cinematic render where the object, materials and scene communicate a clear mood or story.",
+   approach:[
+     ["The model.","A classic double-action revolver: fluted cylinder, hammer, trigger guard, ejector rod and front sight."],
+     ["Materials.","Blued steel with worn edges, a polished cylinder and a glossy black grip."],
+     ["Story.","\"Left Behind.\" A revolver lying alone on a cold floor, in light falling through a window. Something has just happened, and nobody is left in the room."],
+     ["Light and mood.","Low, hard light broken up by branches, deep shadows and a dark, desaturated noir grade."]],
+   scenes:[
+     {title:"Left Behind", note:"The storytelling render.", hero:"gun-floor", imgs:["gun-wall","gun-wall-close"]},
+     {title:"Studio model showcase", note:"Clean studio light to show the model and its shape.", hero:null, imgs:["gun-studio-side","gun-studio-34","gun-studio-close"]}]},
+  {id:"a3", desc:"I created two cinematic car scenes: a rusted old car in the desert at golden hour, and a modern car cutting through night fog.", code:"A.3", title:"Cinematic Car Render", tags:["Materials","Lighting","Rendering"],
+   brief:"Create or use a detailed 3D car and produce a premium cinematic render. Focus on composition, reflections, materials, camera angle, environment and realistic lighting.",
+   output:"One or more polished cinematic car renders.",
+   approach:[
+     ["Two scenes, two moods.","A rusted 1940s sedan at golden hour, and a modern Beetle cutting through night fog."],
+     ["Materials.","Layered bare metal, rust, peeling white paint and dirt on the sedan. Clean glossy teal paint on the Beetle."],
+     ["Light.","A low desert sun for long shadows and rim light, and the car's own headlights and taillights as the only key lights in the fog."],
+     ["Camera.","A high drone angle tells the story, close-ups show the materials, and a low sunset profile carries the emotion."]],
+   scenes:[
+     {title:"Forgotten", note:"An old sedan left in the desert, slowly taken back by nature.", hero:"car-drone-hero", imgs:["car-drone-wide","car-detail","car-sunset","car-silhouette","car-sunset-roof","car-grass","car-grass-close","car-clay"]},
+     {title:"Night Fog", note:"A teaser reveal: detail, rear, then the full silhouette.", hero:"beetle-side", imgs:["beetle-headlight","beetle-rear"]}]},
+  {id:"a4", desc:"I modeled and textured a vintage camper van and rendered it from different angles in a studio setup.", code:"A.4", title:"Van Turnaround", tags:["Modeling","Texturing","Rendering"],
+   brief:"Model and texture a van and present it as a professional turnaround. Show multiple angles to demonstrate the modeling quality, proportions, materials and texture work.",
+   output:"Textured van with front, 3/4, side, 3/4 rear and rear views.",
+   approach:[
+     ["The van.","A 1960s split-window camper in two-tone cherry red and white."],
+     ["Modeling.","Smooth rounded panels with clean edge flow, a V-shaped chrome front trim, a split windscreen, round headlights and engine vents."],
+     ["Materials.","Glossy two-tone car paint, polished chrome, tinted glass and hubcaps with light rust."],
+     ["Presentation.","A seamless studio backdrop and the same light, camera height and lens for every view."]],
+   scenes:[{title:"Studio renders", note:"Lighting and angle tests.", hero:"van-front34", imgs:["van-front34-dark","van-side34"]}]},
+  {id:"a6", desc:"I modeled a vintage bicycle and placed it on a city street at dusk to create a quiet storytelling scene.", code:"A.6", title:"Bicycle Story Scene", tags:["Environment","Storytelling","Rendering"],
+   brief:"Model or use a detailed bicycle and place it in a visually appealing environment. Build a simple story around the scene using composition, props, camera and atmosphere.",
+   output:"A polished storytelling render with a suitable background or environment.",
+   approach:[
+     ["The bike.","A vintage bottle-green roadster with chrome, a bullet headlamp, swept handlebars and full mudguards."],
+     ["Story.","\"The Last Ride Home.\" Dusk in the city, streetlights coming on, an old bike waiting on an empty bike lane."],
+     ["Atmosphere.","Cool blue dusk against warm streetlights: lonely but cosy."],
+     ["Camera.","A low three-quarter view, with the bike lane as a leading line into the city."]],
+   scenes:[
+     {title:"Dusk street", note:"The storytelling render.", hero:"bike-street", imgs:[]},
+     {title:"Studio model showcase", note:"The bike on its own, to show the modeling and materials.", hero:null, imgs:["bike-studio-side","bike-studio-front","bike-studio-rear"]}]},
+];
+/* ================================== */
+
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- lightbox ---------- */
+let lbList=[],lbI=0;
+function openLB(key,list){lbList=list&&list.length?list:[key];lbI=Math.max(0,lbList.indexOf(key));showLB();$('#lb').hidden=false;document.body.style.overflow='hidden';$('#lbClose').focus()}
+function showLB(){const k=lbList[lbI];$('#lbImg').src=`img/${k}.webp`;$('#lbImg').alt=IMAGES[k].cap;$('#lbCap').textContent=IMAGES[k].cap;$('#lbIdx').textContent=`${lbI+1} / ${lbList.length}`;$('#lbPrev').hidden=$('#lbNext').hidden=lbList.length<2}
+function closeLB(){$('#lb').hidden=true;document.body.style.overflow=''}
+$('#lbClose').onclick=closeLB;
+$('#lbPrev').onclick=()=>{lbI=(lbI-1+lbList.length)%lbList.length;showLB()};
+$('#lbNext').onclick=()=>{lbI=(lbI+1)%lbList.length;showLB()};
+$('#lb').addEventListener('click',e=>{if(e.target.id==='lb'||e.target.classList.contains('lb-img'))closeLB()});
+addEventListener('keydown',e=>{if($('#lb').hidden)return;if(e.key==='Escape')closeLB();if(e.key==='ArrowLeft')$('#lbPrev').click();if(e.key==='ArrowRight')$('#lbNext').click()});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-k]');if(!t)return;openLB(t.dataset.k,(t.dataset.list||'').split(',').filter(Boolean))});
+
+const thumb=(k,list)=>`<button class="thumb-btn" type="button" data-k="${k}" data-list="${list.join(',')}"><img src="img/${k}-sm.webp" alt="${esc(IMAGES[k].cap)}" loading="lazy"><span>${esc(IMAGES[k].cap.split(' · ')[1]||IMAGES[k].cap)}</span></button>`;
+
+/* ---------- A.2 house viewer ---------- */
+const vp=$('#vp');
+HOUSE_STAGES.forEach((s,i)=>{const im=document.createElement('img');im.src=`img/${s.img}.webp`;im.alt=`${s.name}: ${s.note}`;im.decoding='async';vp.insertBefore(im,vp.firstChild)});
+const vpImgs=[...vp.querySelectorAll('img')].reverse();
+$('#stages').innerHTML=HOUSE_STAGES.map((s,i)=>`<button class="stage-btn" type="button" data-s="${i}" aria-pressed="false"><span class="n">${String(i+1).padStart(2,'0')}</span><span><b>${s.name}</b><small>${s.sub}</small></span><i class="fill"></i></button>`).join('');
+const btns=[...document.querySelectorAll('.stage-btn')];
+const STAGE_MS=4000;let stage=HOUSE_STAGES.length-1,auto=false,timer=null;
+function setStage(s){
+  stage=s;vpImgs.forEach((im,i)=>im.classList.toggle('on',i===s));
+  btns.forEach((b,i)=>{b.setAttribute('aria-pressed',String(i===s));b.classList.toggle('auto',auto);b.style.setProperty('--dur',STAGE_MS+'ms');const f=b.querySelector('.fill');f.style.animation='none';void f.offsetWidth;f.style.animation=''});
+  $('#hudStage').textContent=HOUSE_STAGES[s].name;$('#hudMode').textContent=HOUSE_STAGES[s].mode;$('#stageNote').textContent=HOUSE_STAGES[s].note;
+  $('#hudCount').textContent=`${String(s+1).padStart(2,'0')} / ${String(HOUSE_STAGES.length).padStart(2,'0')}`;
+  clearTimeout(timer);if(auto)timer=setTimeout(()=>setStage((stage+1)%HOUSE_STAGES.length),STAGE_MS);
+  $('#autoBtn').textContent=auto?'Pause':'Play';
+}
+btns.forEach((b,i)=>b.addEventListener('click',()=>{auto=false;setStage(i)}));
+$('#autoBtn').addEventListener('click',()=>{auto=!auto;setStage(auto?(stage+1)%HOUSE_STAGES.length:stage)});
+const openVP=()=>openLB(HOUSE_STAGES[stage].img,HOUSE_STAGES.map(s=>s.img));
+vp.addEventListener('click',openVP);vp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openVP()}});
+auto=!reduce;setStage(reduce?HOUSE_STAGES.length-1:0);
+$('#swatches').innerHTML=PALETTE.map(p=>`<div class="sw"><i style="background:${p.hex}"></i><span>${p.name}</span><code>${p.hex.toUpperCase()}</code></div>`).join('');
+$('#houseGallery').innerHTML=HOUSE_GALLERY.map(k=>thumb(k,HOUSE_GALLERY)).join('');
+
+/* ---------- A.3 / A.4 / A.6 ---------- */
+const renderProj=p=>{
+  const all=p.scenes.flatMap(s=>[s.hero,...s.imgs]).filter(Boolean);
+  const turn=p.turnaround?`<div class="scene"><div class="scene-head"><h3>Turnaround</h3><p>${esc(p.turnNote)}</p></div>
+    <div class="turn-wrap"><div class="turn">${p.turnaround.map((t,i)=>`<figure class="slot"><div class="box${t.img?'':' empty'}">${t.img?`<img src="img/${t.img}-sm.webp" alt="${esc(t.label)} view" data-k="${t.img}" data-list="${all.join(',')}" loading="lazy">`:'Render pending'}</div><figcaption><b>${t.label}</b><span>${i*45}°</span></figcaption></figure>`).join('')}</div></div></div>`:'';
+  const scenes=p.scenes.map(s=>`<div class="scene"><div class="scene-head"><h3>${esc(s.title)}</h3><p>${esc(s.note)}</p></div>
+    ${s.hero?`<button class="hero-shot" type="button" data-k="${s.hero}" data-list="${all.join(',')}"><img src="img/${s.hero}.webp" alt="${esc(IMAGES[s.hero].cap)}" loading="lazy"><span class="tag-hero">Hero</span><span class="cap">${esc(IMAGES[s.hero].cap)}</span></button>`:''}
+    ${s.imgs.length?`<div class="thumbs">${s.imgs.map(k=>thumb(k,all)).join('')}</div>`:''}</div>`).join('');
+  const vw=VIEWERS[p.id];
+  const viewer=vw?`<div class="scene"><div class="editor sv fx-${vw.fx}${vw.lbx?' lbx':''}" data-sv="${p.id}"><div class="vp" role="button" tabindex="0" aria-label="Open the current view full size" style="aspect-ratio:${vw.ar}"><div class="hud tl">${vw.hud} · <span class="stage sv-stage"></span><br><span class="sv-mode"></span></div><div class="hud tr">${vw.res}</div><div class="hud bl sv-count"></div><i class="sv-flash" aria-hidden="true"></i></div><div class="panel"><div class="panel-in"><div class="panel-head"><span class="label">Outliner · ${esc(vw.title)}</span><button class="linkbtn sv-play" type="button" style="font-size:13px">Play</button></div><div class="stages" role="group" aria-label="Shots"></div><p class="stage-note sv-note"></p><div class="panel-foot"><span style="color:var(--muted)">Click the image or use ← → keys.</span></div></div></div></div></div>`:'';
+  return `<article class="proj" id="${p.id}">
+    <div class="proj-head"><span class="c">${p.code}</span><h2>${esc(p.title)}</h2><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>
+    <p class="proj-desc">${esc(p.desc)}</p><p class="used"><span>Used</span> HDRI · Adobe Photoshop</p>${viewer}${turn}${vw?'':scenes}</article>`};
+$('#projects-first').innerHTML=PROJECTS.filter(p=>p.first).map(renderProj).join('');
+const ORDER=['a3','a4','a5','a6'];
+$('#projects').innerHTML=ORDER.map(id=>PROJECTS.find(p=>p.id===id)).map(renderProj).join('');
+
+
+/* ---------- section A stage viewers ---------- */
+document.querySelectorAll('.sv').forEach(ed=>{
+  const cfg=VIEWERS[ed.dataset.sv],st=cfg.stages,vpEl=ed.querySelector('.vp'),list=st.map(x=>x[0]);
+  st.forEach(([k,name])=>{const im=document.createElement('img');im.src=`img/${k}.webp`;im.alt=`${name}: ${IMAGES[k]?.cap||''}`;im.loading='lazy';im.decoding='async';vpEl.insertBefore(im,vpEl.firstChild)});
+  const imgs=[...vpEl.querySelectorAll('img')].reverse();
+  const box=ed.querySelector('.stages');
+  box.innerHTML=st.map(([k,n,sub],i)=>`<button class="stage-btn" type="button" aria-pressed="false"><span class="n">${String(i+1).padStart(2,'0')}</span><span><b>${n}</b><small>${sub}</small></span><i class="fill"></i></button>`).join('');
+  const btns=[...box.children],MS=3600;let cur=-1,auto=false,t=null;
+  const set=i=>{
+    const prev=cur;cur=(i+st.length)%st.length;
+    imgs.forEach((im,j)=>{im.classList.remove('on','prev');if(j===prev&&prev!==cur)im.classList.add('prev')});
+    void imgs[cur].offsetWidth;imgs[cur].classList.add('on');imgs[cur].loading='eager';
+    if(ed.classList.contains('fx-flash')&&prev>=0){const f=ed.querySelector('.sv-flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go')}
+    btns.forEach((b,j)=>{b.setAttribute('aria-pressed',String(j===cur));b.classList.toggle('auto',auto);b.style.setProperty('--dur',MS+'ms');const f=b.querySelector('.fill');f.style.animation='none';void f.offsetWidth;f.style.animation=''});
+    ed.querySelector('.sv-stage').textContent=st[cur][1];ed.querySelector('.sv-mode').textContent=st[cur][3];ed.querySelector('.sv-note').textContent=st[cur][4];
+    ed.querySelector('.sv-count').textContent=`${String(cur+1).padStart(2,'0')} / ${String(st.length).padStart(2,'0')}`;
+    const ab=btns[cur];if(ab&&box.scrollHeight>box.clientHeight+2)box.scrollTo({top:ab.offsetTop-box.clientHeight/2+ab.offsetHeight/2,behavior:'smooth'});
+    clearTimeout(t);if(auto)t=setTimeout(()=>set(cur+1),MS);ed.querySelector('.sv-play').textContent=auto?'Pause':'Play';
+  };
+  btns.forEach((b,i)=>b.addEventListener('click',()=>{auto=false;set(i)}));
+  ed.querySelector('.sv-play').addEventListener('click',()=>{auto=!auto;auto?set(cur+1):set(cur)});
+  const open=()=>openLB(list[cur],list);
+  vpEl.addEventListener('click',open);
+  vpEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}if(e.key==='ArrowRight'){auto=false;set(cur+1)}if(e.key==='ArrowLeft'){auto=false;set(cur-1)}});
+  set(0);
+  if(!reduce){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&!ed.dataset.started){ed.dataset.started=1;auto=true;set(cur+1)}})},{threshold:.4});io.observe(ed)}
+});
+
+$('#copy').addEventListener('click',async()=>{
+  const b=$('#copy');try{await navigator.clipboard.writeText($('#email').textContent);b.textContent='Copied'}
+  catch(e){const r=document.createRange();r.selectNodeContents($('#email'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Press Ctrl+C'}
+  setTimeout(()=>b.textContent='Copy email',1800);
+});
+
+/* ---------- river ---------- */
+(function(){
+  const hero=$('#top'),cv=$('#river');
+  const STOPS=[.37,.51,.64,.77,.90];
+  let W=0,H=0,amp=0,base=0,surge=0,surgeY=-1,flowSpeed=1,stopPts=[];
+  const cx=(y)=>W/2+amp*Math.sin(y/H*Math.PI*2.3+0.9)+amp*.25*Math.sin(y/H*Math.PI*5.1);
+  const rw=(y)=>base+18*Math.sin(y/H*Math.PI*3+1.7);
+
+  /* ---- clear mossy stream (WebGL) framed by ink on paper ---- */
+  const ctx=cv.getContext('2d'),wcv=$('#water'),icv=$('#ink'),ictx=icv.getContext('2d');
+  const INK='34,72,150',INDIGO='30,52,120',PAPER='244,240,231';
+  let dpr=1,wdpr=1,curls=[],ys=[],tAcc=0;
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  const kk=y=>{const sl=(cx(y+1)-cx(y-1))/2;return 1/Math.sqrt(1+sl*sl)};
+  const VS='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+  const FS=`precision highp float;
+uniform vec2 R;uniform float D,T,A,B,SY,SP,SG;uniform vec2 S[5];
+const float PI=3.14159265;
+float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n2(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),u.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),u.x),u.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*n2(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+float cx(float y){float t=y/R.y;return R.x*.5+A*sin(t*PI*2.3+.9)+A*.25*sin(t*PI*5.1);}
+float rw(float y){return B+18.*sin(y/R.y*PI*3.+1.7);}
+float wh(vec2 q){return fbm(q*1.3)*.55+n2(q*4.2+3.1)*.27+n2(q*9.5+7.7)*.18;}
+float wave(vec2 q,vec2 dir,float sp){float P=4.;float ph0=fract(T/P),ph1=fract(T/P+.5);float w0=1.-abs(1.-2.*ph0);
+  return mix(wh(q-vec2(.37,.11)-dir*ph1*P*sp),wh(q-dir*ph0*P*sp),w0);}
+vec3 rocks(vec2 p,out float gap){vec2 g=floor(p),f=fract(p);float m=9.,m2=9.;vec2 id=vec2(0.);
+  for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 o=vec2(i,j);vec2 r=o+vec2(h1(g+o),h1(g+o+7.3))*.85-f;float d=dot(r,r);if(d<m){m2=m;m=d;id=g+o;}else if(d<m2)m2=d;}
+  gap=smoothstep(.0,.38,sqrt(m2)-sqrt(m));
+  float h=h1(id+3.7),h2=h1(id+9.1);
+  vec3 moss=mix(vec3(.12,.26,.07),vec3(.58,.74,.20),h);moss=mix(moss,vec3(.36,.44,.30),step(.86,h2)*.7);
+  float dome=1.-m*.8;
+  return moss*(.6+.55*dome);}
+vec3 pebbles(vec2 p,out float edge,out float id1){vec2 g=floor(p),f=fract(p);float m=9.,m2=9.;vec2 id=vec2(0.);
+  for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 o=vec2(i,j);vec2 r=o+vec2(h1(g+o+1.3),h1(g+o+4.1))*.9-f;float d=dot(r,r);if(d<m){m2=m;m=d;id=g+o;}else if(d<m2)m2=d;}
+  edge=smoothstep(.0,.32,sqrt(m2)-sqrt(m));id1=h1(id+2.2);
+  vec3 c=mix(vec3(.40,.37,.32),vec3(.62,.58,.50),h1(id+5.5));c=mix(c,vec3(.45,.36,.26),step(.8,h1(id+8.8))*.6);
+  return c*(.55+.6*(1.-m*1.2));}
+void main(){
+  vec2 p=vec2(gl_FragCoord.x,R.y*D-gl_FragCoord.y)/D;
+  float c=cx(p.y),sl=(cx(p.y+1.)-cx(p.y-1.))*.5,k=inversesqrt(1.+sl*sl);
+  float d=(p.x-c)*k,w=rw(p.y),a=abs(d)/w;
+  vec2 tng=normalize(vec2(sl,1.));
+  float aw=a+(n2(p/7.)-.5)*.05+(fbm(p/38.)-.5)*.14;
+  float can=smoothstep(.36,.74,fbm(p/120.+vec2(T*.012,T*.008)));
+  float sb=SY>=0.?exp(-pow((p.y-SY)/120.,2.)):0.;
+  vec3 col;float isW=step(aw,1.);
+  if(aw<1.){
+    vec2 q=p/66.;
+    float sp=SP*.6*(1.-.6*aw*aw),e=.04;
+    float h=wave(q,tng,sp),hx=wave(q+vec2(e,0.),tng,sp),hy=wave(q+vec2(0.,e),tng,sp);
+    float str=1.25+1.2*SG+1.6*sb;
+    vec3 n=normalize(vec3((h-hx)/e*str*.3,(h-hy)/e*str*.3,1.));
+    vec2 rf=n.xy*13.;
+    float gap;vec3 bed=rocks((p+rf)/vec2(82.,82.),gap);
+    float fine=fbm((p+rf)/22.);bed*=.82+.36*fine;bed=mix(vec3(.08,.18,.06),bed,.5+.5*gap);
+    float depth=1.-aw*aw;
+    col=mix(bed,vec3(.04,.18,.14),depth*.55);
+    col*=.6+.75*can;
+    float caus=pow(1.-abs(sin((h*7.+fine*3.)*PI)),9.);
+    col+=vec3(.80,.98,.45)*caus*(.10+.22*can);
+    vec3 V=normalize(vec3(0.,.3,1.)),Rr=reflect(-V,n);
+    vec3 sky=mix(vec3(.30,.50,.72),vec3(.90,.95,1.),smoothstep(.2,.9,clamp(Rr.y*.5+.5,0.,1.)+fbm(q*2.)*.3));
+    float fres=.06+.5*pow(1.-max(dot(n,V),0.),3.);
+    col=mix(col,sky,fres*.65);
+    vec3 L=normalize(vec3(-.3,.5,.8)),Hh=normalize(L+V);
+    col+=vec3(1.,.99,.92)*pow(max(dot(n,Hh),0.),220.)*3.*(.35+can);
+    float fn=fbm(q*3.4-tng*T*sp*1.3),fn2=fbm(q*9.-tng*T*sp*4.5);
+    float foam=smoothstep(.88,1.,aw+(fn-.5)*.3)*smoothstep(.5,.85,fn2+fn*.35)*.65;
+    foam=max(foam,smoothstep(.72,.82,h+fn*.12)*smoothstep(.55,.85,fn2)*.45);
+    for(int i=0;i<5;i++){vec2 qq=p-S[i];float r=length(qq);float along=dot(qq,tng),across=abs(dot(qq,vec2(tng.y,-tng.x)));
+      float ring=smoothstep(48.,38.,r)*smoothstep(32.,37.,r);
+      float wake=step(0.,along)*smoothstep(30.+along*.28,10.,across+(fn-.5)*16.)*exp(-along/110.);
+      foam=max(foam,(ring*.8+wake*.6)*smoothstep(.55,.95,fn2+fn*.5));
+      col*=1.-.3*exp(-r*r/1700.);}
+    foam=max(foam,sb*smoothstep(.4,.8,fn2+fn*.3));
+    col=mix(col,vec3(.93,.97,.96),clamp(foam,0.,1.)*.85);
+  }else{
+    float b=aw-1.;
+    /* rainy green ground: soft blurred foliage, ripple rings, droplets */
+    float f1=fbm(p/170.+vec2(T*.006,0.)),f2=fbm(p/70.+7.),f3=fbm(p/32.+3.);
+    vec3 g=mix(vec3(.10,.24,.05),vec3(.48,.70,.10),smoothstep(.25,.75,f1));
+    g=mix(g,vec3(.70,.86,.25),smoothstep(.55,.85,f2)*.55);
+    g=mix(g,vec3(.06,.16,.07),smoothstep(.55,.8,f3)*.45);
+    g=mix(g,vec3(.30,.45,.55),smoothstep(.72,.9,fbm(p/120.+11.))*.35);
+    float rip=0.;
+    for(int L=0;L<2;L++){
+      float cs=L==0?120.:78.;vec2 gp=p/cs+float(L)*3.7,id=floor(gp),fr=fract(gp);
+      for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 o=vec2(i,j),cid=id+o;
+        vec2 c=o+.2+.6*vec2(h1(cid),h1(cid+5.1));float ph=fract(T*(.18+.12*h1(cid+2.))+h1(cid+9.));
+        float r=length(fr-c)*cs,R0=ph*cs*.9;
+        float wv=sin((r-R0)*.55)*exp(-abs(r-R0)*.08)*step(r,R0+8.)*(1.-ph)*(1.-ph);
+        rip+=wv;}
+    }
+    float rp=rip*.5;
+    g*=1.+rp*.35;g+=vec3(.75,.95,.6)*max(rp,0.)*.12;
+    vec2 dg=floor(p/15.),df=fract(p/15.)-.5;float hd=h1(dg+1.3);
+    if(hd>.9){vec2 dc=df-(vec2(h1(dg+3.),h1(dg+4.))-.5)*.5;float dr=length(dc)*15.,rad=1.+2.4*h1(dg+6.);
+      float drop=smoothstep(rad,rad-.8,dr);float hl=smoothstep(rad*.6,0.,length(dc*15.+vec2(rad*.35,-rad*.35)));
+      g=mix(g,g*.75,drop);g+=vec3(.95,1.,.95)*hl*drop*.9;}
+    float pe,pid;vec3 peb=pebbles(p/vec2(7.5,7.)+fbm(p/14.)*.6,pe,pid);
+    float pebT=1.-smoothstep(.06,.2,b+(fbm(p/22.)-.5)*.25);
+    peb=mix(peb*.55,peb,pe);
+    vec3 land=mix(g,peb*.9,pebT);
+    float wet=1.-smoothstep(0.,.1,b);land*=mix(1.,.6,wet);
+    col=land*(.75+.45*can);
+  }
+  /* light shafts: soft diagonal beams like sun through branches */
+  float sway=sin(T*.35)*.12;vec2 bd=normalize(vec2(.55+sway,1.));
+  float along=dot(p,vec2(bd.y,-bd.x)),down=dot(p,bd);
+  float drift=T*18.+sin(T*.6)*30.;
+  float b1=smoothstep(.52,.95,n2(vec2((along+drift)/34.,T*.35)));
+  float b2=smoothstep(.58,.95,n2(vec2((along-drift*.7)/14.+20.,T*.6)));
+  float b3=smoothstep(.62,.97,n2(vec2((along+drift*1.4)/7.+40.,T*.9)))*.5;
+  float beams=b1*.75+b2*.45+b3;
+  beams*=.75+.25*sin(down*.012-T*1.6+along*.004);
+  beams*=smoothstep(.15,.7,fbm(p/220.+vec2(T*.03,T*.02)));
+  beams*=.85+.15*sin(T*2.3+along*.02);
+  /* grade to the dark mossy-teal palette */
+  float l=dot(col,vec3(.3,.55,.15));
+  vec3 sh=vec3(.018,.04,.035),md=vec3(.10,.22,.18),hi=vec3(.62,.86,.78);
+  vec3 gr=l<.32?mix(sh,md,l/.32):mix(md,hi,clamp((l-.32)/.55,0.,1.));
+  col=mix(col*vec3(.55,.75,.7),gr,.82);
+  col=mix(col,col*vec3(.85,1.15,1.2)+vec3(.015,.05,.06),isW);
+  col*=.72+.75*beams;col+=vec3(.55,.85,.80)*beams*.10;
+  vec2 vv=p/R-.5;col*=1.-.55*dot(vv,vv)*1.8;
+  gl_FragColor=vec4(pow(col,vec3(.96)),1.);
+}`;
+  let gl=null,U={};
+  try{
+    gl=wcv.getContext('webgl',{antialias:false,alpha:true,premultipliedAlpha:true});
+    const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o};
+    const prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(prog));
+    gl.useProgram(prog);const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(prog,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    ['R','D','T','A','B','SY','SP','SG','S'].forEach(k=>U[k]=gl.getUniformLocation(prog,k));
+  }catch(err){console.warn('WebGL water unavailable',err);gl=null}
+  const wctx=gl?null:wcv.getContext('2d');
+  function buildPaper(){
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.fillStyle=`rgb(${PAPER})`;ctx.fillRect(0,0,W,H);
+    const tile=document.createElement('canvas');tile.width=tile.height=140;const tg=tile.getContext('2d');
+    for(let i=0;i<2200;i++){tg.fillStyle=`rgba(${Math.random()<.5?'90,80,60':'255,255,255'},${rnd(.03,.09)})`;tg.fillRect(Math.random()*140,Math.random()*140,rnd(.6,1.8),rnd(.6,1.8))}
+    ctx.fillStyle=ctx.createPattern(tile,'repeat');ctx.fillRect(0,0,W,H);
+    const blob=(x,y,r,rgb,al)=>{const gr=ctx.createRadialGradient(x,y,0,x,y,r);gr.addColorStop(0,`rgba(${rgb},${al})`);gr.addColorStop(1,`rgba(${rgb},0)`);ctx.fillStyle=gr;ctx.fillRect(x-r,y-r,r*2,r*2)};
+    for(let i=0;i<40;i++){const y=rnd(-40,H+40),s=Math.random()<.5?-1:1,x=cx(y)+s*rw(y)*rnd(1,1.9);blob(x,y,rnd(40,130),Math.random()<.6?'96,132,52':'48,96,170',rnd(.05,.12))}
+    const bloom=(x0,y0,R0,dir)=>{for(let i=0;i<70;i++){const a=rnd(0,Math.PI*2),d=Math.random()**.6*R0;blob(x0+Math.cos(a)*d,y0+Math.sin(a)*d*.8,rnd(10,46),INDIGO,rnd(.03,.09))}
+      ctx.lineCap='round';for(let i=0;i<26;i++){ctx.strokeStyle=`rgba(${INDIGO},${rnd(.05,.16)})`;ctx.lineWidth=rnd(.8,2.4);ctx.beginPath();const r0=rnd(R0*.2,R0*.95),a0=rnd(0,Math.PI*2);for(let t=0;t<1;t+=.04){const a=a0+dir*t*1.6,r=r0*(1-t*.25);const x=x0+Math.cos(a)*r,y=y0+Math.sin(a)*r*.8;t?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke()}};
+    bloom(W*.94,H*.1,Math.min(W,H)*.32,1);bloom(W*.04,H*.96,Math.min(W,H)*.3,-1);
+    for(let i=0;i<(W<600?60:130);i++){const y=rnd(0,H),near=Math.random()<.7,x=near?cx(y)+(Math.random()<.5?-1:1)*rw(y)*rnd(1.15,2.6):rnd(0,W),r=Math.random()<.08?rnd(4,9):rnd(.6,2.6);ctx.fillStyle=`rgba(${INDIGO},${rnd(.35,.9)})`;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill()}
+  }
+  function layout(){
+    if(document.documentElement.classList.contains('v-home')){const bar=document.querySelector('.bar');hero.style.height=Math.max(460,innerHeight-bar.offsetHeight)+'px'}else hero.style.height='';
+    const r=hero.getBoundingClientRect();W=r.width;H=r.height;if(!W||!H)return;
+    dpr=Math.min(devicePixelRatio||1,2);wdpr=Math.min(devicePixelRatio||1,1.15);
+    cv.width=icv.width=Math.round(W*dpr);cv.height=icv.height=Math.round(H*dpr);
+    wcv.width=Math.round(W*wdpr);wcv.height=Math.round(H*wdpr);
+    ictx.setTransform(dpr,0,0,dpr,0,0);
+    amp=Math.min(W*.26,320);base=W<600?64:112;
+    stopPts=[];
+    const cb=hero.querySelector('.rh-copy').getBoundingClientRect().bottom-r.top,y0=Math.min(H*.42,cb+52),y1=H-(W<600?60:84),nS=document.querySelectorAll('.stop').length;
+    document.querySelectorAll('.stop').forEach((b,i)=>{const y=y0+(y1-y0)*i/Math.max(1,nS-1),x=cx(y);stopPts.push(x,y);b.style.setProperty('--x',x+'px');b.style.setProperty('--y',y+'px');b.classList.toggle('left',x>W*.55)});
+    ys=[];for(let y=-12;y<=H+12;y+=5)ys.push(y);
+    curls=[];let prev=null;
+    for(let y=0;y<=H;y+=4){const sl=cx(y+2)-cx(y-2);if(prev!==null&&Math.sign(sl)!==Math.sign(prev))curls.push({y,side:cx(y)>W/2?1:-1});prev=sl}
+    curls.push({y:H*.12,side:-1},{y:H*.62,side:1});
+    if(gl)gl.viewport(0,0,wcv.width,wcv.height);else wctx.setTransform(wdpr,0,0,wdpr,0,0);
+    buildPaper();
+  }
+  function curl(x,y,R,dir,t){
+    ictx.lineWidth=1.4;ictx.strokeStyle=`rgba(${INK},.95)`;ictx.fillStyle=`rgba(${INK},.9)`;
+    for(let n=0;n<3;n++){const r=R*(1-n*.22),ox=x+dir*n*R*1.35,oy=y-n*R*.25+Math.sin(t*2+n)*1.2;ictx.beginPath();
+      for(let a=0;a<=Math.PI*3.1;a+=.18){const rr=r*(1-a/(Math.PI*3.6));const px=ox+dir*Math.cos(a+Math.PI)*rr,py=oy-Math.sin(a+Math.PI)*rr;a?ictx.lineTo(px,py):ictx.moveTo(px,py)}ictx.stroke();
+      ictx.beginPath();ictx.arc(ox+dir*r*1.2,oy-r*1.15,1.3,0,7);ictx.fill()}
+  }
+  function drawInk(t){
+    ictx.clearRect(0,0,W,H);ictx.lineCap='round';
+    for(const s of [-1,1])for(let n=0;n<4;n++){
+      ictx.beginPath();ys.forEach((y,i)=>{const x=cx(y)+s*(rw(y)+2+n*5.5)/kk(y)+Math.sin(y*.05+n*1.3+t*.8)*.6;i?ictx.lineTo(x,y):ictx.moveTo(x,y)});
+      ictx.setLineDash(n?[90+n*40,8+n*5]:[]);ictx.lineDashOffset=n*37;
+      ictx.lineWidth=n?1.5-n*.25:2.2;ictx.strokeStyle=`rgba(${INK},${n?.85-n*.17:.95})`;ictx.stroke();
+    }
+    ictx.setLineDash([]);
+    for(const c of curls){const y=c.y,x=cx(y)+c.side*(rw(y)+30)/kk(y);curl(x,y,W<600?6:8,c.side,t)}
+  }
+  function drawWater2d(){wctx.clearRect(0,0,W,H);wctx.beginPath();ys.forEach((y,i)=>{const x=cx(y)-rw(y)/kk(y);i?wctx.lineTo(x,y):wctx.moveTo(x,y)});for(let i=ys.length-1;i>=0;i--){const y=ys[i];wctx.lineTo(cx(y)+rw(y)/kk(y),y)}wctx.closePath();wctx.fillStyle='rgba(70,120,60,.75)';wctx.fill()}
+  function render(dt){
+    flowSpeed+=(1+surge*5-flowSpeed)*.05;surge*=.985;
+    if(surgeY>=0){surgeY+=dt*1.1;if(surgeY>H+200)surgeY=-1}
+    tAcc+=dt/1000;if(!W||!H)return;
+    if(gl){gl.uniform2f(U.R,W,H);gl.uniform1f(U.D,wdpr);gl.uniform1f(U.T,tAcc);gl.uniform1f(U.A,amp);gl.uniform1f(U.B,base);
+      gl.uniform1f(U.SY,surgeY);gl.uniform1f(U.SP,flowSpeed);gl.uniform1f(U.SG,Math.min(1,surge));gl.uniform2fv(U.S,stopPts);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3)}
+    else drawWater2d();
+    if(!gl)drawInk(tAcc);
+  }
+  let last=performance.now(),vis=true;
+  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
+  function tick(now){const dt=Math.min(now-last,50);last=now;if(vis)render(dt);requestAnimationFrame(tick)}
+  layout();addEventListener('resize',layout);
+  if(reduce){tAcc=3;render(16)}else requestAnimationFrame(tick);
+
+  const SECS={A:{flow:$('#flowA'),state:'#stopAState',txt:'6 projects · Opened'},B:{flow:$('#flowB'),state:'#stopBState',txt:'8 projects · Opened'},C:{flow:$('#flowC'),state:'#stopCState',txt:'6 projects · Opened'},D:{flow:$('#flowD'),state:'#stopDState',txt:'1 project · Opened'},E:{flow:$('#flowE'),state:'#stopEState',txt:'4 projects · Opened'}};
+  const VIEWS={home:hero,about:$('#about'),contact:$('#contact'),A:SECS.A.flow,B:SECS.B.flow,C:SECS.C.flow,D:SECS.D.flow,E:SECS.E.flow};
+  const HASH={home:'#top',about:'#about',contact:'#contact',A:'#section-a',B:'#section-b',C:'#section-c',D:'#section-d',E:'#section-e'};
+  function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(el._t);el._t=setTimeout(()=>el.hidden=true,2200)}
+  function markOpen(k){const b=document.querySelector(`.stop[data-sec="${k}"]`);if(!b)return;b.setAttribute('aria-expanded','true');$(SECS[k].state).textContent=SECS[k].txt}
+  let current='home';
+  function showView(name,target,animate){
+    if(!VIEWS[name])name='home';
+    current=name;
+    $('#lb').hidden=true;document.body.style.overflow='';
+    Object.entries(VIEWS).forEach(([k,el])=>{el.hidden=k!==name});
+    document.documentElement.classList.toggle('v-home',name==='home');
+    $('#siteFoot').hidden=name==='home';
+    document.querySelectorAll('nav [data-view]').forEach(a=>{if(a.dataset.view===name)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+    document.querySelectorAll('.flow video').forEach(v=>{if(!VIEWS[name].contains(v))v.pause()});
+    const f=VIEWS[name];
+    if(SECS[name]){markOpen(name);
+      if(animate&&!reduce){[...f.querySelectorAll(':scope > .sec-head, :scope > .proj, :scope > div > .proj, :scope > .flow-end')].forEach((el,i)=>{el.style.setProperty('--i',Math.min(i,6));el.style.setProperty('--dx',(i%2?24:-24)+'px')});f.classList.add('arriving');setTimeout(()=>f.classList.remove('arriving'),2200)}
+      }
+    try{history.replaceState(null,'',name==='home'?location.pathname+location.search:HASH[name])}catch(_){}
+    if(name==='home'){layout()}
+    window.scrollTo(0,0);
+    if(target)setTimeout(()=>document.querySelector(target)?.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}),60);
+  }
+  window.showView=showView;
+  function openSec(k){
+    if(!SECS[k])return;
+    if(current==='home'&&!reduce){surge=1;surgeY=0;setTimeout(()=>showView(k,null,true),900)}
+    else showView(k,null,true);
+  }
+  document.querySelectorAll('.stop').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.sec;if(SECS[k])openSec(k);else{if(!reduce){surge=.5;surgeY=0}toast(`Section ${k} is coming soon`)}}));
+  document.querySelectorAll('nav [data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const v=a.dataset.view;SECS[v]?showView(v,null,true):showView(v)}));
+  $('#homeBtn').addEventListener('click',e=>{e.preventDefault();showView('home')});
+  document.querySelectorAll('.backUp').forEach(b=>b.addEventListener('click',()=>showView('home')));
+  if(reduce)document.querySelectorAll('.flow video').forEach(v=>{v.removeAttribute('autoplay');v.pause()});
+  const hs=location.hash;
+  const map=[[/^#(section-a|a[1-6]|viewport)$/,'A'],[/^#(section-b|b[1-6])$/,'B'],[/^#(section-c|c[1-6])$/,'C'],[/^#(section-d|d[1-6])$/,'D'],[/^#(section-e|e[1-3])$/,'E'],[/^#about$/,'about'],[/^#contact$/,'contact']];
+  const hit=map.find(([re])=>re.test(hs));
+  if(hit){showView(hit[1],/^#(section-|about|contact)/.test(hs)?null:hs)}else showView('home');
+})();
+
+/* ---------- sliders ---------- */
+document.querySelectorAll('.slider').forEach(sl=>{
+  const tr=sl.querySelector('.slides'),n=tr.children.length,prev=sl.querySelector('.sl-prev'),next=sl.querySelector('.sl-next'),cnt=sl.querySelector('.slider-count');
+  const per=()=>Math.max(1,Math.round(tr.clientWidth/(tr.children[0].getBoundingClientRect().width+12)));
+  const upd=()=>{const w=tr.children[0].getBoundingClientRect().width+12;if(!w)return;const i=Math.round(tr.scrollLeft/w),p=per();cnt.textContent=`${i+1}${p>1?'–'+Math.min(n,i+p):''} / ${n}`;prev.disabled=tr.scrollLeft<4;next.disabled=tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-4};
+  prev.onclick=()=>tr.scrollBy({left:-tr.clientWidth-12});next.onclick=()=>tr.scrollBy({left:tr.clientWidth+12});
+  tr.addEventListener('scroll',()=>requestAnimationFrame(upd));addEventListener('resize',upd);
+  new MutationObserver(upd).observe(sl.closest('.flow'),{attributes:true,attributeFilter:['hidden']});upd();
+});
+
+/* ---------- watching eye ---------- */
+(function(){
+  const bg=$('#eyeBg'),iris=bg.querySelector('.eye-iris');
+  let tx=0,ty=0,x=0,y=0,rot=0,last=performance.now(),idle=0,blinkT=-1,nextBlink=2500+Math.random()*3000;
+  addEventListener('pointermove',e=>{const r=iris.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;const dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy)||1,m=r.width*.2*Math.min(1,d/500);tx=dx/d*m;ty=dy/d*m;idle=0},{passive:true});
+  addEventListener('scroll',()=>{ty=Math.max(-1,Math.min(1,(scrollY%800)/400-1))*iris.getBoundingClientRect().width*.12;idle=0},{passive:true});
+  if(reduce)return;
+  (function tick(now){const dt=Math.min(now-last,50);last=now;idle+=dt;
+    if(!bg.offsetParent&&getComputedStyle(bg).opacity==='0'){requestAnimationFrame(tick);return}
+    if(idle>2600){const w=iris.getBoundingClientRect().width;const a=Math.random()*Math.PI*2,m=w*(.05+Math.random()*.15);tx=Math.cos(a)*m;ty=Math.sin(a)*m;idle=0}
+    x+=(tx-x)*Math.min(1,dt*.006);y+=(ty-y)*Math.min(1,dt*.006);rot+=dt*.004;
+    nextBlink-=dt;if(nextBlink<0&&blinkT<0){blinkT=0;nextBlink=3500+Math.random()*5000}
+    let b=1;if(blinkT>=0){blinkT+=dt;const k=blinkT/260;b=k<.5?1-k*1.8:.1+(k-.5)*1.8;if(k>=1){blinkT=-1;b=1}}
+    iris.style.setProperty('--ix',x.toFixed(1)+'px');iris.style.setProperty('--iy',y.toFixed(1)+'px');iris.style.setProperty('--blink',b.toFixed(3));
+    requestAnimationFrame(tick)})(last);
+})();
+
+</script>
+
+</body></html>
